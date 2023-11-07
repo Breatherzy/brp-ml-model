@@ -42,4 +42,4 @@ model.compile(
 model.fit(x_train, y_train, epochs=5000)
 
 # Save the model to a file
-model.save("networkTest.h5")
+model.save("newNetwork.h5")

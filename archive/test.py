@@ -1,41 +1,27 @@
 import numpy as np
 import tensorflow as tf
-from matplotlib import pyplot as plt
 from tensorflow import keras
+import coremltools as ct
 
-from saving import load_data
+# Load your Keras model
+model = keras.models.load_model("stopNetwork.keras")
 
-model = keras.models.load_model("networkTest.h5")
-model.save("networkTest.keras")
-
-
-# print(model.predict(np.array([[0.1, 0.2, 0.3, 0.4, 0.5]])))
-# print(model.predict(np.array([[0.9, 0.8, 0.7, 0.6, 0.5]])))
-# print(model.predict(np.array([[0.1, 0.2, 0.3, 0.4, 0.5]])))
-# print(model.predict(np.array([[0.0, 0.0, 0.0, 0.0, 0.0]])))
-#
-#
-# data, result = load_data(
-#     [
-#         ["saved_data/wdechDebug2.txt", 1],
-#         ["saved_data/wydechDebug2.txt", -1],
-#         ["saved_data/bezdechDebug2.txt", 0],
-#     ]
-# )
-
-
+# Convert the model to TensorFlow Lite format
 converter = tf.lite.TFLiteConverter.from_keras_model(model)
 converter.optimizations = [tf.lite.Optimize.DEFAULT]
 tflite_quant_model = converter.convert()
 
-# Save the model to a .tflite file
-with open("networkTest.tflite", "wb") as f:
+# Save the TFLite model to a file
+with open("stopNetwork.tflite", "wb") as f:
     f.write(tflite_quant_model)
 
-import coremltools as ct
+# Define the input shape if your model uses flexible input sizes,
+# otherwise, specify the exact input shape.
+input_shape = (1, 5)  # Example fixed input shape. Replace with your actual input shape.
+inputs = [ct.TensorType(shape=input_shape)]  # Use ct.RangeDim() for flexible dimensions if needed.
 
-# Convert the model to Core ML format
-coreml_model = ct.convert(model, source="tensorflow")
+# Convert the model to Core ML format with specified input shape
+coreml_model = ct.convert(model, source="tensorflow", inputs=inputs)
 
-# Save the model to a .mlmodel file
-coreml_model.save("networkTest.mlmodel")
+# Save the Core ML model to a file
+coreml_model.save("stopNetwork.mlpackage")

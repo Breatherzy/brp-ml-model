@@ -1,9 +1,7 @@
 import numpy as np
-from sklearn.model_selection import train_test_split
-from sklearn import svm
+from sklearn.svm import OneClassSVM
 from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import classification_report, accuracy_score
-from joblib import dump
+from sklearn.pipeline import make_pipeline
 
 # Wczytywanie danych profilu
 def load_data(filename):
@@ -14,41 +12,53 @@ def load_data(filename):
         return np.array(sequences)
 
 
+def average_slope(x, y):
+    # Oblicz różnice między kolejnymi wartościami y i x
+    dy = np.diff(y)
+    dx = np.diff(x)
+
+    # Oblicz nachylenia między każdymi dwoma punktami
+    slopes = dy / dx
+
+    # Oblicz średnie nachylenie (średnią z wartości nachyleń)
+    avg_slope = np.mean(slopes)
+
+    return avg_slope
+
 # Załadowanie danych
 profile_data = load_data('data_categorised/zatrzymanie.txt')
+X_train = []
+x = []
+for i in range(10):
+    x.append(i)
 
-# Przygotowanie etykiet
-# Wszystkie dane z profilu będą miały etykietę 1
-labels = np.ones(len(profile_data))
+for points in profile_data:
+    delta = points[-1] - points[1]
+    range = max(points) - min(points)
+    avg_slope = average_slope(x,points)
+    std = np.std(points)
+    X_train.append([delta, range, avg_slope, points.size, std])
 
-# Przygotowanie danych i etykiet (przy założeniu, że mamy równą ilość danych "nieprofilowych")
-# Tu symulujemy "negatywne" przypadki jako losowe dane
-# W rzeczywistym przypadku powinieneś użyć rzeczywistych danych, które nie pasują do profilu
-non_profile_data = np.random.rand(len(profile_data), profile_data.shape[1]) # symulacja danych niezwiązanych z profilem
-non_profile_labels = np.zeros(len(non_profile_data)) # etykieta 0 dla niezwiązanych danych
 
-# Łączenie danych
-X = np.vstack((profile_data, non_profile_data))
-y = np.hstack((labels, non_profile_labels))
+# Załaduj tylko pasujące sekwencje jako dane treningowe
+#X_train =   # Właściwe cechy tylko pasujących danych
 
-# Normalizacja danych
+# Skalowanie cech
 scaler = StandardScaler()
-X = scaler.fit_transform(X)
+X_scaled = scaler.fit_transform(X_train)
 
-# Podział na zestawy treningowe i testowe
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+# Tworzenie modelu One-Class SVM
+model = OneClassSVM(gamma='auto').fit(X_scaled)
 
-# Tworzenie modelu SVM
-clf = svm.SVC(gamma='scale')
+# Po nauczeniu modelu, możesz go użyć do predykcji nowych danych
+new_data = X_train  # Nowe dane do klasyfikacji, przeskalowane tak samo jak dane treningowe
+new_data_scaled = scaler.transform(new_data)
 
-# Trenowanie modelu
-clf.fit(X_train, y_train)
+# Przewidywanie nowych danych
+# Model zwróci 1 dla sekwencji podobnych do tych, na których był trenowany,
+# i -1 dla tych, które uzna za odstające
+predicted = model.predict(new_data_scaled)
 
-# Przewidywanie na zestawie testowym
-y_pred = clf.predict(X_test)
-
-# Ocena modelu
-print(classification_report(y_test, y_pred))
-print('Accuracy:', accuracy_score(y_test, y_pred))
-
-dump(clf, 'modele/zatrzymanie.joblib')
+# Wyświetlenie wyników
+for i, pred in enumerate(predicted):
+    print(f'Sequence {i} prediction: {"Match" if pred == 1 else "No match"}')

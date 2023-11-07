@@ -85,3 +85,23 @@ def load_data(filenames):
                 result.append([[j[1]]])
 
     return data, result
+
+def read_data_from_files_and_create_flags(file_paths):
+    combined_data = []  # Wspólna tablica na dane z wszystkich plików
+    combined_flags = []  # Wspólna tablica na flagi
+
+    for file_path in file_paths:
+        # Ustalenie flagi w zależności od nazwy pliku
+        flag = 1 if 'zatrzymanie.txt' in file_path else 0
+
+        # Otwarcie pliku i czytanie danych
+        with open('saved_data/'+file_path, 'r') as file:
+            for line in file:
+                # Przetwarzanie każdej linii i dodawanie do combined_data jako tablica
+                line_data = [float(number) for number in line.strip().split(', ')]
+                combined_data.append([line_data])  # Dodanie danych z linii jako tablica do głównej tablicy
+
+                # Dodanie tablicy flag odpowiadającej danej linii
+                combined_flags.append([[flag]])
+
+    return combined_data, combined_flags
