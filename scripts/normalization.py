@@ -8,6 +8,7 @@ def normalize_window(window):
     normalized = [(-1 + 2 * (x - min_val) / range_val) for x in window]
     return normalized
 
+
 def normalize(numbers):
     normalized_values = []
 
