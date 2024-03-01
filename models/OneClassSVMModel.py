@@ -4,7 +4,7 @@ from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import OneClassSVM
 
-from AbstractModel import AbstractModel
+from models.AbstractModel import AbstractModel
 
 
 class OneClassSVMModel(AbstractModel):

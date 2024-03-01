@@ -1,8 +1,7 @@
 import numpy as np
 import tensorflow as tf
-from sklearn.model_selection import train_test_split
 
-from AbstractModel import AbstractModel
+from models.AbstractModel import AbstractModel
 
 
 class GRUModel(AbstractModel):
@@ -19,8 +18,6 @@ class GRUModel(AbstractModel):
 
     def fit(self):
         if self.check_if_model_is_compiled():
-            self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(
-                self.X, self.y, test_size=0.2, random_state=42)
             self.model.fit(self.X_train, self.y_train, epochs=100,
                            batch_size=32, validation_data=(self.X_test, self.y_test))
 

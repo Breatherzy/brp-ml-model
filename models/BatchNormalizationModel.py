@@ -1,14 +1,16 @@
 import numpy as np
 import tensorflow as tf
-from sklearn.model_selection import train_test_split
 
-from AbstractModel import AbstractModel
+from models.AbstractModel import AbstractModel
 
 
 class BNModel(AbstractModel):
-
     def compile(self):
         if self.check_if_data_is_loaded():
+            for dataset_name in ['y', 'y_train', 'y_test']:
+                dataset = getattr(self, dataset_name)
+                setattr(self, dataset_name, tf.keras.utils.to_categorical(dataset, num_classes=3))
+
             self.model = tf.keras.models.Sequential([
                 tf.keras.layers.Dense(64, input_shape=(
                     self.X.shape[1],), activation='relu'),
@@ -23,12 +25,11 @@ class BNModel(AbstractModel):
 
     def fit(self):
         if self.check_if_model_is_compiled():
-            self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(
-                self.X, self.y, test_size=0.2, random_state=42)
-            y_train_encoded = tf.keras.utils.to_categorical(
-                self.y_train, num_classes=3)
-            self.model.fit(self.X_train, y_train_encoded, epochs=100,
-                           batch_size=32, validation_data=(self.X_test, self.y_test))
+            history = self.model.fit(self.X_train, self.y_train, epochs=100,
+                                     batch_size=32, validation_data=(self.X_test, self.y_test))
+            history = history.history
+            with open('models/saves/' + self.__class__.__name__ + '.history', 'w') as file:
+                file.write(str(history))
 
     def predict(self, X_test):
         if self.check_if_model_is_fitted():
@@ -36,7 +37,15 @@ class BNModel(AbstractModel):
 
     def evaluate(self):
         y_pred = self.predict(self.X_test)
-        print('Accuracy:', np.mean(y_pred == self.y_test))
+        if self.y_test.ndim > 1:
+            y_test = np.argmax(self.y_test, axis=1)
+        else:
+            y_test = self.y_test
+        print('Accuracy:', np.mean(y_pred == y_test))
 
     def save(self, filename):
         self.model.save(filename)
+
+    def load(self, filename):
+        self.model = tf.keras.models.load_model(filename)
+        self.is_model_loaded = True

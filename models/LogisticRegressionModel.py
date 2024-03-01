@@ -1,9 +1,8 @@
 from joblib import dump
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
-from sklearn.model_selection import train_test_split
 
-from AbstractModel import AbstractModel
+from models.AbstractModel import AbstractModel
 
 
 class LogisticRegressionModel(AbstractModel):
@@ -13,8 +12,6 @@ class LogisticRegressionModel(AbstractModel):
 
     def fit(self):
         if self.check_if_model_is_compiled():
-            self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(
-                self.X, self.y, test_size=0.2, random_state=42)
             self.model.fit(self.X_train, self.y_train)
 
     def predict(self, X_test):
