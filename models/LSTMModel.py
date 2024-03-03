@@ -2,10 +2,13 @@ import numpy as np
 from tensorflow.keras.layers import LSTM, Dense
 from tensorflow.keras.models import Sequential
 
-from models.AbstractModel import AbstractModel
+from models.SequentialModel import SequentialModel
 
 
-class LSTMModel(AbstractModel):
+class LSTMModel(SequentialModel):
+    def load_data(self, filename):
+        super().load_data(filename, expand_dims=True)
+
     def compile(self):
         if self.check_if_data_is_loaded():
             self.model = Sequential([
@@ -17,18 +20,7 @@ class LSTMModel(AbstractModel):
             self.model.compile(
                 optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
-    def fit(self):
-        if self.check_if_model_is_compiled():
-            self.model.fit(self.X_train, self.y_train, epochs=100,
-                           batch_size=32, validation_data=(self.X_test, self.y_test))
-
     def predict(self, X_test):
-        if self.check_if_model_is_fitted():
-            return np.argmax(self.model.predict(X_test), axis=1)
-
-    def evaluate(self):
-        y_pred = self.predict(self.X_test)
-        print('Accuracy:', np.mean(y_pred == self.y_test))
-
-    def save(self, filename):
-        self.model.save(filename)
+        if len(X_test.shape) == 2:
+            X_test = np.expand_dims(X_test, axis=1)
+        return super().predict(X_test)

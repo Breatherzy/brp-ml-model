@@ -1,10 +1,11 @@
-from abc import ABC, abstractmethod
+from abc import abstractmethod, ABCMeta
 
 import numpy as np
+from keras.src.utils import to_categorical
 from sklearn.model_selection import train_test_split
 
 
-class AbstractModel(ABC):
+class AbstractModel(metaclass=ABCMeta):
     def __init__(self):
         self.X = None
         self.y = None
@@ -12,21 +13,38 @@ class AbstractModel(ABC):
         self.X_test = None
         self.y_train = None
         self.y_test = None
+        self.y_pred = None
         self.model = None
         self.is_model_loaded = False
+        self.is_model_fitted = False
 
-    def load_data(self, filename):
+    def load_data(self, filename, expand_dims=False, convert_to_categorical=False):
         """
         Metoda do ładowania danych z pliku i podziału na dane treningowe i testowe.
         Każda linia pliku zawiera dane rozdielone spacją, a ostatnia wartość to etykieta.
+
+        :param filename: nazwa pliku z danymi
+        :type filename: str
+
+        :param expand_dims: czy dane wejściowe mają być rozszerzone o jedną osie
+        :type expand_dims: bool
+
+        :param convert_to_categorical: czy etykiety mają być przekształcone do postaci kategorycznej
+        :type convert_to_categorical: bool
         """
         with open(filename, 'r') as f:
             sequences = []
             for line in f.readlines():
                 sequences.append([float(value) for value in line.split(' ')])
             data = np.array(sequences)
+
         self.X = data[:, :-1]
         self.y = data[:, -1]
+
+        if expand_dims:
+            self.X = np.expand_dims(self.X, axis=1)
+        if convert_to_categorical:
+            self.y = to_categorical(self.y, num_classes=len(np.unique(self.y)))
 
         self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(
             self.X, self.y, test_size=0.2, random_state=42)
@@ -35,7 +53,6 @@ class AbstractModel(ABC):
     def compile(self):
         """
         Metoda do kompilowania modelu.
-        Zawiera ewentualne przekształcenia danych wejściowych potrzebne do modelu.
         """
         raise NotImplementedError("Metoda compile() nie jest zaimplementowana")
 
@@ -57,9 +74,9 @@ class AbstractModel(ABC):
         raise NotImplementedError("Metoda predict() nie jest zaimplementowana")
 
     @abstractmethod
-    def evaluate(self):
+    def evaluate(self, X_test: np.ndarray = None, y_test: np.ndarray = None) -> float:
         """
-        Metoda drukująca wyniki ewaluacji modelu.
+        Metoda zwrająca wyniki ewaluacji modelu.
         """
         raise NotImplementedError(
             "Metoda evaluate() nie jest zaimplementowana")
@@ -71,6 +88,7 @@ class AbstractModel(ABC):
         """
         raise NotImplementedError("Metoda save() nie jest zaimplementowana")
 
+    @abstractmethod
     def load(self, filename):
         """
         Metoda do wczytywania modelu z pliku.
@@ -90,8 +108,7 @@ class AbstractModel(ABC):
         """
         Metoda do sprawdzania czy model jest skompilowany.
         """
-        if (not self.is_model_loaded and (self.X_train is None or self.X_test is None
-                                          or self.y_train is None or self.y_test is None)):
+        if not self.is_model_fitted and not self.is_model_loaded:
             raise ValueError(
                 "Dane nie są podzielone na zbiór treningowy i testowy. Użyj metody fit() przed ewaluacją modelu")
         return True

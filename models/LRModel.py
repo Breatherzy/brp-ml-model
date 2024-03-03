@@ -1,21 +1,20 @@
 from joblib import dump, load
-from sklearn.metrics import accuracy_score, classification_report
-from sklearn.pipeline import make_pipeline
-from sklearn.preprocessing import StandardScaler
-from sklearn.svm import OneClassSVM
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score
 
 from models.AbstractModel import AbstractModel
 
 
-class OneClassSVMModel(AbstractModel):
+class LRModel(AbstractModel):
     def compile(self):
         if self.check_if_data_is_loaded():
-            self.model = make_pipeline(
-                StandardScaler(), OneClassSVM(gamma='auto'))
+            self.model = LogisticRegression(max_iter=100)
 
     def fit(self):
         if self.check_if_model_is_compiled():
-            self.model.fit(self.X)
+            history = self.model.fit(self.X_train, self.y_train)
+            with open('models/saves/' + self.__class__.__name__ + '.history', 'w') as file:
+                file.write(str(history))
             self.is_model_fitted = True
 
     def predict(self, X_test):
@@ -27,9 +26,6 @@ class OneClassSVMModel(AbstractModel):
             X_test = self.X_test
             y_test = self.y_test
         y_pred = self.model.predict(X_test)
-        y_test = y_test - 1
-        with open('models/saves/' + self.__class__.__name__ + '.history', 'w') as file:
-            file.write(str(classification_report(y_test, y_pred, zero_division=True)))
         return accuracy_score(y_test, y_pred)
 
     def save(self, filename):

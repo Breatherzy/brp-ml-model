@@ -1,20 +1,19 @@
 import numpy as np
-from tensorflow.keras.layers import Conv1D, Flatten, Dense
+from tensorflow.keras.layers import GRU, Dense
 from tensorflow.keras.models import Sequential
 
 from models.SequentialModel import SequentialModel
 
 
-class Conv1DModel(SequentialModel):
+class GRUModel(SequentialModel):
     def load_data(self, filename):
         super().load_data(filename, expand_dims=True)
 
     def compile(self):
         if self.check_if_data_is_loaded():
             self.model = Sequential([
-                Conv1D(filters=64, kernel_size=1, activation='relu',
-                       input_shape=(1, self.X.shape[2])),
-                Flatten(),
+                GRU(50, activation='relu', input_shape=(
+                    self.X.shape[1], self.X.shape[2])),
                 Dense(50, activation='relu'),
                 Dense(3, activation='softmax')
             ])
