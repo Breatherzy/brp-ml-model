@@ -1,11 +1,12 @@
-import numpy as np
+from multiprocessing import Process, freeze_support, Queue
+from tkinter import Tk, Button, Frame
+
 import matplotlib
+import matplotlib.pyplot as plt
+import numpy as np
 from matplotlib.widgets import SpanSelector
 
 matplotlib.use('TkAgg')
-import matplotlib.pyplot as plt
-from tkinter import Tk, Button, Frame
-from multiprocessing import Process, freeze_support, Queue
 
 # Load data from txt file
 file_path = 'datasets/pretrained/tens_train_pretrained.txt'
@@ -25,9 +26,12 @@ span_selector_active = False
 def plot_data(ax):
     ax.cla()  # Clear current axes
     end_index = current_start_index + WINDOW_SIZE
-    colors = [COLOR_MAP[label] for label in data[current_start_index:end_index, -1]]
-    scatter = ax.scatter(range(current_start_index, end_index), data[current_start_index:end_index, 0], color=colors, picker=True)
-    line = ax.plot(range(current_start_index, end_index), data[current_start_index:end_index, 0], linestyle='-', color='gray', alpha=0.5)
+    colors = [COLOR_MAP[label]
+              for label in data[current_start_index:end_index, -1]]
+    scatter = ax.scatter(range(current_start_index, end_index),
+                         data[current_start_index:end_index, 0], color=colors, picker=True)
+    line = ax.plot(range(current_start_index, end_index),
+                   data[current_start_index:end_index, 0], linestyle='-', color='gray', alpha=0.5)
     ax.set_title('Interactive Plot')
     ax.set_xlabel('Index')
     ax.set_ylabel('Value')
@@ -70,7 +74,8 @@ def choose_color(initial_color):
     BREATH_STATE = {-1: 'BREATH OUT', 0: 'NO BREATH', 1: 'BREATH IN'}
     for label, color in {0: 'green', -1: 'red', 1: 'blue'}.items():
         button_label = BREATH_STATE[label]
-        button = Button(frame, text=str(button_label), command=lambda c=label: select_color(c), bg=color, width=8, highlightbackground=color)
+        button = Button(frame, text=str(button_label), command=lambda c=label: select_color(
+            c), bg=color, width=8, highlightbackground=color)
         button.pack(side='left', padx=5)
 
     root.protocol("WM_DELETE_WINDOW", lambda: select_color(initial_color))

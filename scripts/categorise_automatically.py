@@ -1,7 +1,7 @@
 import numpy as np
 from scripts.load_data import load_data
+
 from scripts.normalization import normalize
-from scripts.plot import interactive_plot
 
 # Load and normalize data
 np.random.seed(42)
@@ -21,7 +21,8 @@ def monotonicity(data, data_size=5):
     result = [0] * len(data)
 
     for i in range(data_size-1, len(data), 5):
-        amplitude = max(data[i - data_size+1:i + 1]) - min(data[i - data_size+1:i + 1])
+        amplitude = max(data[i - data_size+1:i + 1]) - \
+            min(data[i - data_size+1:i + 1])
         if all(data[j] < data[j + 1] for j in range(i - data_size-1, i)) and amplitude > 0.3:
             result[i] = 1
         elif all(data[j] > data[j + 1] for j in range(i - data_size-1, i)) and amplitude > 0.3:
@@ -70,7 +71,7 @@ def find_monotonicity_changes(array, window_size=widnow_size):
 
 
 mono_numbers = monotonicity(numbers, data_size=widnow_size)
-#numbers = numbers[widnow_size:]
+# numbers = numbers[widnow_size:]
 
 
 # interactive_plot(numbers, mono_numbers)
