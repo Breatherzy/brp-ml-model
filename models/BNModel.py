@@ -1,6 +1,5 @@
-from tensorflow.python.keras.layers import Dense, BatchNormalization
-from tensorflow.python.keras.models import Sequential
-
+from keras.models import Sequential
+from keras.layers import Dense, BatchNormalization
 from models.SequentialModel import SequentialModel
 
 
@@ -10,14 +9,16 @@ class BNModel(SequentialModel):
 
     def compile(self):
         if self.check_if_data_is_loaded():
-            self.model = Sequential([
-                Dense(64, input_shape=(
-                    self.X.shape[1],), activation='relu'),
-                BatchNormalization(),
-                Dense(64, activation='relu'),
-                BatchNormalization(),
-                # Wyjście dla 3 klas
-                Dense(3, activation='softmax')
-            ])
+            self.model = Sequential(
+                [
+                    Dense(64, input_shape=(self.X.shape[1],), activation="relu"),
+                    BatchNormalization(),
+                    Dense(64, activation="relu"),
+                    BatchNormalization(),
+                    # Wyjście dla 3 klas
+                    Dense(3, activation="softmax"),
+                ]
+            )
             self.model.compile(
-                optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+                optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"]
+            )

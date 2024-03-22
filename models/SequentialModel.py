@@ -1,7 +1,7 @@
 from abc import ABC, ABCMeta, abstractmethod
 
 import numpy as np
-from tensorflow.python.keras.models import load_model
+from keras.models import load_model
 
 from models.AbstractModel import AbstractModel
 
@@ -16,10 +16,17 @@ class SequentialModel(AbstractModel, ABC, metaclass=ABCMeta):
 
     def fit(self, epochs=100, batch_size=32):
         if self.check_if_model_is_compiled():
-            history = self.model.fit(self.X_train, self.y_train, epochs=epochs,
-                                     batch_size=batch_size, validation_data=(self.X_test, self.y_test))
+            history = self.model.fit(
+                self.X_train,
+                self.y_train,
+                epochs=epochs,
+                batch_size=batch_size,
+                validation_data=(self.X_test, self.y_test),
+            )
             history = history.history
-            with open('models/saves/' + self.__class__.__name__ + '.history', 'w') as file:
+            with open(
+                "models/saves/" + self.__class__.__name__ + ".history", "w"
+            ) as file:
                 file.write(str(history))
             self.is_model_fitted = True
 

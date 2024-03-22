@@ -9,7 +9,7 @@ from scripts.normalization import normalize
 np.random.seed(42)
 numbers = []
 number_string = []
-files = ['bezdech.txt', 'zatrzymanie.txt', '']
+files = ["bezdech.txt", "zatrzymanie.txt", ""]
 numbers = load_data("data_set/raw_data_no_breath2.txt")
 numbers = normalize(numbers)
 number_strings = [str(str_number) for str_number in numbers]
@@ -25,10 +25,10 @@ def plot_data(start_index=0):
     plt.cla()  # Clear current axes
     end_index = start_index + WINDOW_SIZE
     # 'picker=5' allows points to be clickable
-    plt.plot(numbers[start_index:end_index], '-o', ms=4, picker=5)
-    plt.title('Interactive Plot')
-    plt.xlabel('Index')
-    plt.ylabel('Value')
+    plt.plot(numbers[start_index:end_index], "-o", ms=4, picker=5)
+    plt.title("Interactive Plot")
+    plt.xlabel("Index")
+    plt.ylabel("Value")
     plt.grid(True)
     plt.tight_layout()
     fig.canvas.draw()
@@ -36,11 +36,11 @@ def plot_data(start_index=0):
 
 def on_key(event):
     global current_start_index
-    if event.key == 'right':
+    if event.key == "right":
         current_start_index += SELECTION_SIZE
         if current_start_index > len(numbers) - WINDOW_SIZE:
             current_start_index = len(numbers) - WINDOW_SIZE
-    elif event.key == 'left':
+    elif event.key == "left":
         current_start_index -= SELECTION_SIZE
         if current_start_index < 0:
             current_start_index = 0
@@ -49,15 +49,20 @@ def on_key(event):
 
 def onselect(xmin, xmax):
     range_ = int(xmax) - int(xmin)
-    if range_ >= SELECTION_SIZE:  # If more than 10 points are selected, just pick the first 10
-        selected_points = number_strings[int(
-            xmin)+current_start_index:int(xmin + SELECTION_SIZE)+current_start_index]
-        with open('data_output/' + files[0], "a") as file:
+    if (
+        range_ >= SELECTION_SIZE
+    ):  # If more than 10 points are selected, just pick the first 10
+        selected_points = number_strings[
+            int(xmin)
+            + current_start_index : int(xmin + SELECTION_SIZE)
+            + current_start_index
+        ]
+        with open("data_output/" + files[0], "a") as file:
             file.write(f'{" ".join(selected_points)}\n')
 
 
 fig, ax = plt.subplots(figsize=(10, 6))
-fig.canvas.mpl_connect('key_press_event', on_key)
+fig.canvas.mpl_connect("key_press_event", on_key)
 
 span = SpanSelector(
     ax,

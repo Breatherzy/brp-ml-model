@@ -13,7 +13,9 @@ class LRModel(AbstractModel):
     def fit(self):
         if self.check_if_model_is_compiled():
             history = self.model.fit(self.X_train, self.y_train)
-            with open('models/saves/' + self.__class__.__name__ + '.history', 'w') as file:
+            with open(
+                "models/saves/" + self.__class__.__name__ + ".history", "w"
+            ) as file:
                 file.write(str(history))
             self.is_model_fitted = True
 

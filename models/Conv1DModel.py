@@ -1,6 +1,6 @@
 import numpy as np
-from tensorflow.python.keras.layers import Conv1D, Flatten, Dense
-from tensorflow.python.keras.models import Sequential
+from keras.layers import Conv1D, Flatten, Dense
+from keras.models import Sequential
 
 from models.SequentialModel import SequentialModel
 
@@ -11,15 +11,24 @@ class Conv1DModel(SequentialModel):
 
     def compile(self):
         if self.check_if_data_is_loaded():
-            self.model = Sequential([
-                Conv1D(filters=64, kernel_size=1, activation='relu',
-                       input_shape=(1, self.X.shape[2])),
-                Flatten(),
-                Dense(50, activation='relu'),
-                Dense(3, activation='softmax')
-            ])
+            self.model = Sequential(
+                [
+                    Conv1D(
+                        filters=64,
+                        kernel_size=1,
+                        activation="relu",
+                        input_shape=(1, self.X.shape[2]),
+                    ),
+                    Flatten(),
+                    Dense(50, activation="relu"),
+                    Dense(3, activation="softmax"),
+                ]
+            )
             self.model.compile(
-                optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+                optimizer="adam",
+                loss="sparse_categorical_crossentropy",
+                metrics=["accuracy"],
+            )
 
     def predict(self, X_test):
         if len(X_test.shape) == 2:

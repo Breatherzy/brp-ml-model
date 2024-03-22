@@ -27,7 +27,7 @@ class RandomForestModel(AbstractModel):
             X_test = self.X_test
             y_test = self.y_test
         y_pred = self.model.predict(X_test)
-        with open('models/saves/' + self.__class__.__name__ + '.history', 'w') as file:
+        with open("models/saves/" + self.__class__.__name__ + ".history", "w") as file:
             file.write(str(classification_report(y_test, y_pred)))
         return accuracy_score(y_test, y_pred)
 

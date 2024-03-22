@@ -32,10 +32,10 @@ class AbstractModel(metaclass=ABCMeta):
         :param convert_to_categorical: czy etykiety mają być przekształcone do postaci kategorycznej
         :type convert_to_categorical: bool
         """
-        with open(filename, 'r') as f:
+        with open(filename, "r") as f:
             sequences = []
             for line in f.readlines():
-                sequences.append([float(value) for value in line.split(' ')])
+                sequences.append([float(value) for value in line.split(" ")])
             data = np.array(sequences)
 
         self.X = data[:, :-1]
@@ -47,7 +47,8 @@ class AbstractModel(metaclass=ABCMeta):
             self.y = to_categorical(self.y, num_classes=len(np.unique(self.y)))
 
         self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(
-            self.X, self.y, test_size=0.2, random_state=42)
+            self.X, self.y, test_size=0.2, random_state=42
+        )
 
     @abstractmethod
     def compile(self):
@@ -66,7 +67,6 @@ class AbstractModel(metaclass=ABCMeta):
 
     @abstractmethod
     def predict(self, X_test: np.ndarray) -> np.ndarray:
-
         """
         Metoda do przewidywania na nowych danych.
         """
@@ -78,8 +78,7 @@ class AbstractModel(metaclass=ABCMeta):
         """
         Metoda zwrająca wyniki ewaluacji modelu.
         """
-        raise NotImplementedError(
-            "Metoda evaluate() nie jest zaimplementowana")
+        raise NotImplementedError("Metoda evaluate() nie jest zaimplementowana")
 
     @abstractmethod
     def save(self, filename):
@@ -110,7 +109,8 @@ class AbstractModel(metaclass=ABCMeta):
         """
         if not self.is_model_fitted and not self.is_model_loaded:
             raise ValueError(
-                "Dane nie są podzielone na zbiór treningowy i testowy. Użyj metody fit() przed ewaluacją modelu")
+                "Dane nie są podzielone na zbiór treningowy i testowy. Użyj metody fit() przed ewaluacją modelu"
+            )
         return True
 
     def check_if_data_is_loaded(self):
@@ -118,5 +118,7 @@ class AbstractModel(metaclass=ABCMeta):
         Metoda do sprawdzania czy dane są wczytane.
         """
         if self.X is None or self.y is None:
-            raise ValueError("Dane nie są wczytane. Użyj metody load_data() przed kompilacją modelu")
+            raise ValueError(
+                "Dane nie są wczytane. Użyj metody load_data() przed kompilacją modelu"
+            )
         return True

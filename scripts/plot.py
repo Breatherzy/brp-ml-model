@@ -1,7 +1,7 @@
 import matplotlib
 import matplotlib.pyplot as plt
 
-matplotlib.use('TkAgg')
+matplotlib.use("TkAgg")
 
 
 def interactive_plot(features, labels, window_size=150):
@@ -12,9 +12,16 @@ def interactive_plot(features, labels, window_size=150):
     def plot(start_index=0):
         # Resetowanie wykresu
         ax.clear()
-        colors = ["red" if m == -1 else "green" if m == 1 else "blue" if m == 0 else "gray" for m in labels]
+        colors = [
+            "red" if m == -1 else "green" if m == 1 else "blue" if m == 0 else "gray"
+            for m in labels
+        ]
         for i, (y, color) in enumerate(
-                zip(features[start_index:start_index + window_size], colors[start_index:start_index + window_size])):
+            zip(
+                features[start_index : start_index + window_size],
+                colors[start_index : start_index + window_size],
+            )
+        ):
             ax.scatter(i + start_index, y, color=color)
             # ax.annotate(f'{y:.2f}', (i + start_index, y),
             #             textcoords="offset points", xytext=(0, 10), ha='center')
@@ -25,9 +32,9 @@ def interactive_plot(features, labels, window_size=150):
     # Definicja funkcji obsługi zdarzeń klawiatury
     def on_key(event):
         nonlocal current_index
-        if event.key == 'right':
+        if event.key == "right":
             current_index += 10  # Przesunięcie okna w prawo
-        elif event.key == 'left':
+        elif event.key == "left":
             current_index -= 10  # Przesunięcie okna w lewo
 
         # Zapobieganie wyjściu poza zakres
@@ -36,7 +43,7 @@ def interactive_plot(features, labels, window_size=150):
 
     # Tworzenie figury i osi
     fig, ax = plt.subplots()
-    plt.gcf().canvas.mpl_connect('key_press_event', on_key)
+    plt.gcf().canvas.mpl_connect("key_press_event", on_key)
 
     # Pierwsze rysowanie wykresu
     plot(current_index)

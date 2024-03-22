@@ -10,8 +10,7 @@ from models.AbstractModel import AbstractModel
 class OneClassSVMModel(AbstractModel):
     def compile(self):
         if self.check_if_data_is_loaded():
-            self.model = make_pipeline(
-                StandardScaler(), OneClassSVM(gamma='auto'))
+            self.model = make_pipeline(StandardScaler(), OneClassSVM(gamma="auto"))
 
     def fit(self):
         if self.check_if_model_is_compiled():
@@ -28,7 +27,7 @@ class OneClassSVMModel(AbstractModel):
             y_test = self.y_test
         y_pred = self.model.predict(X_test)
         y_test = y_test - 1
-        with open('models/saves/' + self.__class__.__name__ + '.history', 'w') as file:
+        with open("models/saves/" + self.__class__.__name__ + ".history", "w") as file:
             file.write(str(classification_report(y_test, y_pred, zero_division=True)))
         return accuracy_score(y_test, y_pred)
 
