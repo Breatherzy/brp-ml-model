@@ -9,7 +9,7 @@ from matplotlib.widgets import SpanSelector
 matplotlib.use("TkAgg")
 
 # Load data from txt file
-file_path = "../data/pretrained/tens/tens_normal.txt"
+file_path = "../data/pretrained/tens/tens_bezdech_wdech.txt"
 data = np.loadtxt(file_path, delimiter=",")
 
 # Constants
@@ -51,20 +51,19 @@ def plot_data(ax):
 def onpick(event):
     if not span_selector_active and event.artist.get_label() == "_child0":
         point_index = int(event.ind[0] + current_start_index)
-        update_point_color(point_index)
-
-
-def update_point_color(point_index, new_color=None):
-    current_color = int(data[point_index, -1])
-    if not new_color:
+        current_color = int(data[point_index, -1])
         new_color = choose_color(current_color)
+        update_point_color(point_index, point_index+1, new_color)
 
+
+def update_point_color(start_index, end_index, new_color=None):
     # Update color in the data array
-    data[point_index, -1] = new_color
+    for i in range(start_index, end_index):
+        data[i, -1] = new_color
     plot_data(ax)
 
     # Save updated data to the txt file
-    np.savetxt(file_path, data, fmt="%.18f", delimiter=" ")
+    np.savetxt(file_path, data, fmt="%.18f", delimiter=",")
 
 
 def choose_color(initial_color):
@@ -124,8 +123,7 @@ def on_span_select(xmin, xmax):
     start_index = int(max(xmin + current_start_index, 0))
     end_index = int(min(xmax + current_start_index + 1, len(data)))
     new_color = choose_color(int(data[start_index, -1]))
-    for i in range(start_index, end_index):
-        update_point_color(i, new_color)
+    update_point_color(start_index, end_index, new_color)
 
 
 def tk_process(q):
