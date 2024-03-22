@@ -46,9 +46,9 @@ def save_sequences(file_to_retrieve_sequences: str, file_to_save: str, size: int
         data, tags = load_tagged_data(file_to_retrieve_sequences)
     sequences = []
     for i in range(size, len(data)):
-        sequence = data[i -size: i]
+        sequence = data[i-size: i]
         taged_sequence = tags[i-size: i]
-        sequences.append(sequence + [int(sum(taged_sequence) / size)])
+        sequences.append(sequence + [int(sum(taged_sequence) / size)+1])
 
     with open(file_to_save, "w") as file:
         for seq in sequences:

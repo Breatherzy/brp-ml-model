@@ -35,20 +35,27 @@ class AbstractModel(metaclass=ABCMeta):
         with open(filename, "r") as f:
             sequences = []
             for line in f.readlines():
-                sequences.append([float(value) for value in line.split(" ")])
+                sequences.append([float(value) for value in line.split(",")])
             data = np.array(sequences)
 
-        self.X = data[:, :-1]
-        self.y = data[:, -1]
+        # TODO: add testing set from tens_test.txt
+        with open("data/pretrained/tens_sequence/tens_test.txt", "r") as f:
+            sequences = []
+            for line in f.readlines():
+                sequences.append([float(value) for value in line.split(",")])
+            data_test = np.array(sequences)
+
+        self.X_train = data[:, :-1]
+        self.y_train = data[:, -1]
+        self.X_test = data_test[:, :-1]
+        self.y_test = data_test[:, -1]
 
         if expand_dims:
-            self.X = np.expand_dims(self.X, axis=1)
+            self.X_train = np.expand_dims(self.X_train, axis=1)
+            self.X_test = np.expand_dims(self.X_test, axis=1)
         if convert_to_categorical:
-            self.y = to_categorical(self.y, num_classes=len(np.unique(self.y)))
-
-        self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(
-            self.X, self.y, test_size=0.2, random_state=42
-        )
+            self.y_train = to_categorical(self.y_train, num_classes=len(np.unique(self.y_train)))
+            self.y_test = to_categorical(self.y_test, num_classes=len(np.unique(self.y_test)))
 
     @abstractmethod
     def compile(self):
@@ -117,7 +124,7 @@ class AbstractModel(metaclass=ABCMeta):
         """
         Metoda do sprawdzania czy dane są wczytane.
         """
-        if self.X is None or self.y is None:
+        if self.X_train is None or self.y_train is None:
             raise ValueError(
                 "Dane nie są wczytane. Użyj metody load_data() przed kompilacją modelu"
             )
