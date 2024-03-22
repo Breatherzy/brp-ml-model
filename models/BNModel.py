@@ -1,5 +1,5 @@
-from tensorflow.keras.layers import Dense, BatchNormalization
-from tensorflow.keras.models import Sequential
+from tensorflow.python.keras.layers import Dense, BatchNormalization
+from tensorflow.python.keras.models import Sequential
 
 from models.SequentialModel import SequentialModel
 

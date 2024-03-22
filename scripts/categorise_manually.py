@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.widgets import SpanSelector
-from scripts.load_data import load_data_no_breath
+from scripts.load_data import load_data
 
 from scripts.normalization import normalize
 
@@ -10,7 +10,7 @@ np.random.seed(42)
 numbers = []
 number_string = []
 files = ['bezdech.txt', 'zatrzymanie.txt', '']
-numbers = load_data_no_breath("data_set/raw_data_no_breath2.txt")
+numbers = load_data("data_set/raw_data_no_breath2.txt")
 numbers = normalize(numbers)
 number_strings = [str(str_number) for str_number in numbers]
 mono_numbers = []

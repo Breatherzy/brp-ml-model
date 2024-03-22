@@ -1,7 +1,7 @@
 from abc import ABC, ABCMeta, abstractmethod
 
 import numpy as np
-from tensorflow.keras.models import load_model
+from tensorflow.python.keras.models import load_model
 
 from models.AbstractModel import AbstractModel
 

@@ -1,6 +1,6 @@
 import numpy as np
-from tensorflow.keras.layers import Conv1D, Flatten, Dense
-from tensorflow.keras.models import Sequential
+from tensorflow.python.keras.layers import Conv1D, Flatten, Dense
+from tensorflow.python.keras.models import Sequential
 
 from models.SequentialModel import SequentialModel
 
