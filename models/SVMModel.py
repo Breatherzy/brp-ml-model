@@ -1,5 +1,5 @@
 from joblib import dump, load
-from sklearn.metrics import classification_report, accuracy_score
+from sklearn.metrics import accuracy_score, classification_report
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC
 

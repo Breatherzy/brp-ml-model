@@ -1,5 +1,5 @@
-from multiprocessing import Process, freeze_support, Queue
-from tkinter import Tk, Button, Frame
+from multiprocessing import Process, Queue, freeze_support
+from tkinter import Button, Frame, Tk
 
 import matplotlib
 import matplotlib.pyplot as plt
@@ -9,13 +9,13 @@ from matplotlib.widgets import SpanSelector
 matplotlib.use("TkAgg")
 
 # Load data from txt file
-file_path = "datasets/pretrained/tens_train_pretrained.txt"
-data = np.loadtxt(file_path)
+file_path = "../data/pretrained/tens/tens_normal.txt"
+data = np.loadtxt(file_path, delimiter=",")
 
 # Constants
 COLOR_MAP = {-1: "red", 0: "green", 1: "blue"}
 WINDOW_SIZE = 150
-SELECTION_SIZE = 10
+SELECTION_SIZE = 5
 
 # Global variables
 current_start_index = 0

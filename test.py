@@ -47,8 +47,9 @@ def models_test():
 
 
 def plot_raw_data():
-    from scripts.plot import interactive_plot
     import numpy as np
+
+    from scripts.plot import interactive_plot
 
     data = np.loadtxt("data/raw/tens/tens_test.txt")
 
@@ -58,5 +59,18 @@ def plot_raw_data():
     interactive_plot(features, labels)
 
 
+def plot_tagged_data():
+    import numpy as np
+
+    from scripts.plot import interactive_plot
+
+    data = np.loadtxt("data/pretrained/tens/tens_test.txt", delimiter=",")
+
+    features = data[:, :-1]
+    labels = data[:, -1]
+
+    interactive_plot(features, labels)
+
+
 if __name__ == "__main__":
-    models_test()
+    plot_tagged_data()

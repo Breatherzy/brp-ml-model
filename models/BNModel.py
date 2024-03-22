@@ -1,5 +1,6 @@
+from keras.layers import BatchNormalization, Dense
 from keras.models import Sequential
-from keras.layers import Dense, BatchNormalization
+
 from models.SequentialModel import SequentialModel
 
 

@@ -1,5 +1,5 @@
 import numpy as np
-from keras.layers import Conv1D, Flatten, Dense
+from keras.layers import Conv1D, Dense, Flatten
 from keras.models import Sequential
 
 from models.SequentialModel import SequentialModel

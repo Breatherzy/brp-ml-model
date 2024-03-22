@@ -1,8 +1,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.widgets import SpanSelector
-from scripts.load_data import load_data
 
+from scripts.load_data import load_data
 from scripts.normalization import normalize
 
 # Load and normalize data

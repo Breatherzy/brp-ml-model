@@ -1,6 +1,18 @@
 import re
 
 
+def load_raw_data(filename: str) -> list[float]:
+    numbers = []
+    # Geting data from file
+    with open(filename) as file:
+        data = file.read().splitlines()
+        for data_line in data:
+            numbers.append(float(data_line))
+    return numbers
+
+    return numbers
+
+
 def load_data(filename):
     numbers = []
     # Geting data from file
