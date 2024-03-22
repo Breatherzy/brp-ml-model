@@ -120,8 +120,8 @@ def on_key(event):
 
 
 def on_span_select(xmin, xmax):
-    start_index = int(max(xmin + current_start_index, 0))
-    end_index = int(min(xmax + current_start_index + 1, len(data)))
+    start_index = int(max(xmin, 0))
+    end_index = int(min(xmax + 1, len(data)))
     new_color = choose_color(int(data[start_index, -1]))
     update_point_color(start_index, end_index, new_color)
 
