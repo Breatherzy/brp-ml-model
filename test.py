@@ -8,6 +8,7 @@ from models.LSTMModel import LSTMModel
 from models.OneClassSVMModel import OneClassSVMModel
 from models.RandomForestModel import RandomForestModel
 from models.SVMModel import SVMModel
+from scripts.load_data import save_sequences
 
 
 def models_test():
@@ -64,7 +65,7 @@ def plot_tagged_data():
 
     from scripts.plot import interactive_plot
 
-    data = np.loadtxt("data/pretrained/tens/tens_test.txt", delimiter=",")
+    data = np.loadtxt("data/pretrained/tens_point/tens_test.txt", delimiter=",")
 
     features = data[:, :-1]
     labels = data[:, -1]
@@ -73,4 +74,5 @@ def plot_tagged_data():
 
 
 if __name__ == "__main__":
-    plot_tagged_data()
+    save_sequences("data/pretrained/tens_point/tens_normal.txt", "data/pretrained/tens_sequence/tens_normal.txt", 5)
+    #plot_tagged_data()

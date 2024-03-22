@@ -64,25 +64,14 @@ def find_monotonicity_changes(array, window_size=WINDOW_SIZE):
 
 
 def save_tagged_data(data, monotonicity, filename):
-    with open("../data/pretrained/tens/" + filename, "w") as file:
+    with open("../data/pretrained/tens_point/" + filename, "w") as file:
         for i in range(len(data)):
             file.write(f"{data[i]},{monotonicity[i]}\n")
 
 
-def save_sequences(data, monotonicity, value, filename, size):
-    sequences = []
-    for i in range(size, len(data)):
-        if monotonicity[i] == value:
-            sequences.append(data[i - size + 1 : i + 1])
-
-    with open("data_output/" + filename, "w") as file:
-        for seq in sequences:
-            file.write(", ".join(map(str, seq)) + "\n")
-
-
 current_directory = os.getcwd()
 desired_directory = (
-    os.path.dirname(os.path.dirname(current_directory)) + "/brp-ml-model/data/raw/tens/"
+    os.path.dirname(os.path.dirname(current_directory)) + "/brp-ml-model/data/raw/tens_point/"
 )
 for file in os.listdir(desired_directory):
     filename = os.fsdecode(file)
