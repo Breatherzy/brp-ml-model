@@ -54,8 +54,12 @@ class AbstractModel(metaclass=ABCMeta):
             self.X_train = np.expand_dims(self.X_train, axis=1)
             self.X_test = np.expand_dims(self.X_test, axis=1)
         if convert_to_categorical:
-            self.y_train = to_categorical(self.y_train, num_classes=len(np.unique(self.y_train)))
-            self.y_test = to_categorical(self.y_test, num_classes=len(np.unique(self.y_test)))
+            self.y_train = to_categorical(
+                self.y_train, num_classes=len(np.unique(self.y_train))
+            )
+            self.y_test = to_categorical(
+                self.y_test, num_classes=len(np.unique(self.y_test))
+            )
 
     @abstractmethod
     def compile(self):
@@ -79,6 +83,13 @@ class AbstractModel(metaclass=ABCMeta):
         """
 
         raise NotImplementedError("Metoda predict() nie jest zaimplementowana")
+
+    @abstractmethod
+    def plot_prediction(self):
+        """
+        Metoda do wizualizacji przewidywań modelu.
+        """
+        raise NotImplementedError("Metoda plot_prediction() nie jest zaimplementowana")
 
     @abstractmethod
     def evaluate(self, X_test: np.ndarray = None, y_test: np.ndarray = None) -> float:

@@ -71,7 +71,8 @@ def save_tagged_data(data, monotonicity, filename):
 
 current_directory = os.getcwd()
 desired_directory = (
-    os.path.dirname(os.path.dirname(current_directory)) + "/brp-ml-model/data/raw/tens_point/"
+    os.path.dirname(os.path.dirname(current_directory))
+    + "/brp-ml-model/data/raw/tens_point/"
 )
 for file in os.listdir(desired_directory):
     filename = os.fsdecode(file)

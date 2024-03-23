@@ -53,7 +53,7 @@ def onpick(event):
         point_index = int(event.ind[0] + current_start_index)
         current_color = int(data[point_index, -1])
         new_color = choose_color(current_color)
-        update_point_color(point_index, point_index+1, new_color)
+        update_point_color(point_index, point_index + 1, new_color)
 
 
 def update_point_color(start_index, end_index, new_color=None):

@@ -4,6 +4,7 @@ import numpy as np
 from keras.models import load_model
 
 from models.AbstractModel import AbstractModel
+from scripts.plot import interactive_plot
 
 
 class SequentialModel(AbstractModel, ABC, metaclass=ABCMeta):
@@ -32,7 +33,12 @@ class SequentialModel(AbstractModel, ABC, metaclass=ABCMeta):
 
     def predict(self, X_test):
         if self.check_if_model_is_fitted():
-            return np.argmax(self.model.predict(X_test), axis=1)
+            self.y_predicted = np.argmax(self.model.predict(X_test), axis=1)
+            return self.y_predicted
+
+    def plot_prediction(self) -> None:
+        if self.check_if_model_is_fitted():
+            interactive_plot(self.X_test[:, -1, 2], self.y_predicted, self.y_test)
 
     def evaluate(self, X_test=None, y_test=None):
         if X_test is None and y_test is None:

@@ -9,7 +9,6 @@ from models.OneClassSVMModel import OneClassSVMModel
 from models.RandomForestModel import RandomForestModel
 from models.SVMModel import SVMModel
 from scripts.load_data import save_sequences
-import numpy as np
 
 
 def models_test():
@@ -30,13 +29,12 @@ def models_test():
         _model = model()
         _model.load_data("data/pretrained/tens_sequence/tens_normal.txt")
         _model.compile()
-        _model.fit()
+        _model.fit(epochs=10)
         pre_save = _model.evaluate()
         _model.save("models/saves/" + _model.__class__.__name__ + ".keras")
         print("Model saved:", _model.__class__.__name__ + ".keras")
 
-
-        np.savetxt("data/xd.txt", _model.predict(_model.X_test))
+        _model.plot_prediction()
         # sleep(5)
         # _model = model()
         # _model.load_data("data/pretrained/tens_sequence/tens_test.txt")
@@ -81,5 +79,5 @@ def plot_tagged_data():
 #  data from model and X_test, y_test fields
 
 if __name__ == "__main__":
-    #save_sequences("data/pretrained/tens_point/tens_test.txt", "data/pretrained/tens_sequence/tens_test.txt", 5)
+    # save_sequences("data/pretrained/tens_point/tens_test.txt", "data/pretrained/tens_sequence/tens_test.txt", 5)
     models_test()

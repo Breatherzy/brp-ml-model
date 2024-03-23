@@ -1,33 +1,39 @@
-import matplotlib
+import os
+
 import matplotlib.pyplot as plt
 
-matplotlib.use("TkAgg")
 
-
-def interactive_plot(features, labels, window_size=150):
+def interactive_plot(features, labels_predicted, labels_actual, window_size=150):
     # Inicjalizacja zmiennej globalnej
     current_index = 0
 
     # Definicja funkcji rysującej wykres
-    def plot(start_index=0):
-        # Resetowanie wykresu
+    def plot(ax, start_index=0, predicted=True):
         ax.clear()
         colors = [
-            "red" if m == -1 else "green" if m == 1 else "blue" if m == 0 else "gray"
-            for m in labels
+            "red" if m == 0 else "green" if m == 2 else "blue" if m == 1 else "gray"
+            for m in labels_predicted
         ]
-        for i, (y, color) in enumerate(
-            zip(
-                features[start_index : start_index + window_size],
-                colors[start_index : start_index + window_size],
-            )
-        ):
-            ax.scatter(i + start_index, y, color=color)
-            # ax.annotate(f'{y:.2f}', (i + start_index, y),
-            #             textcoords="offset points", xytext=(0, 10), ha='center')
+        if not predicted:
+            colors = [
+                "red" if m == 0 else "green" if m == 2 else "blue" if m == 1 else "gray"
+                for m in labels_actual
+            ]
 
+        ax.scatter(
+            range(start_index, start_index + window_size),
+            features[start_index : start_index + window_size],
+            color=colors[start_index : start_index + window_size],
+            picker=True,
+        )
+        ax.plot(
+            range(start_index, start_index + window_size),
+            features[start_index : start_index + window_size],
+            linestyle="-",
+            color="gray",
+            alpha=0.5,
+        )
         ax.set_xlim(start_index, start_index + window_size)
-        plt.draw()
 
     # Definicja funkcji obsługi zdarzeń klawiatury
     def on_key(event):
@@ -39,14 +45,17 @@ def interactive_plot(features, labels, window_size=150):
 
         # Zapobieganie wyjściu poza zakres
         current_index = max(0, min(len(features) - window_size, current_index))
-        plot(current_index)
+        plot(ax1, current_index, predicted=True)
+        plot(ax2, current_index, predicted=False)
+        plt.draw()
 
     # Tworzenie figury i osi
-    fig, ax = plt.subplots()
+    fig, (ax1, ax2) = plt.subplots(2, 1)
     plt.gcf().canvas.mpl_connect("key_press_event", on_key)
 
     # Pierwsze rysowanie wykresu
-    plot(current_index)
+    plot(ax1, current_index, predicted=True)
+    plot(ax2, current_index, predicted=False)
 
     # Wyświetlenie wykresu
     plt.show()
