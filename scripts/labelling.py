@@ -9,11 +9,11 @@ from matplotlib.widgets import SpanSelector
 matplotlib.use("TkAgg")
 
 # Load data from txt file
-file_path = "../data/pretrained/tens_sequence/tens_normal.txt"
+file_path = "../data/pretrained/tens_sequence/tens_bezdech_wdech.txt"
 data = np.loadtxt(file_path, delimiter=",")
 
 # Constants
-COLOR_MAP = {-1: "red", 0: "green", 1: "blue"}
+COLOR_MAP = {0.0: "red", 1.0: "green", 2.0: "blue"}
 WINDOW_SIZE = 300
 SELECTION_SIZE = 5
 
@@ -78,8 +78,8 @@ def choose_color(initial_color):
 
     frame = Frame(root)
     frame.pack(padx=10, pady=10)
-    BREATH_STATE = {-1: "BREATH OUT", 0: "NO BREATH", 1: "BREATH IN"}
-    for label, color in {0: "green", -1: "red", 1: "blue"}.items():
+    BREATH_STATE = {0.0: "BREATH OUT", 1.0: "NO BREATH", 2.0: "BREATH IN"}
+    for label, color in {1.0: "green", 0.0: "red", 2.0: "blue"}.items():
         button_label = BREATH_STATE[label]
         button = Button(
             frame,

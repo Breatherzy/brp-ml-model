@@ -59,7 +59,7 @@ def plot_raw_data():
     features = data
     labels = np.zeros(len(data))
 
-    interactive_plot(features, labels)
+    interactive_plot(features, labels, labels)
 
 
 def plot_tagged_data():
@@ -72,12 +72,12 @@ def plot_tagged_data():
     features = data[:, :-1]
     labels = data[:, -1]
 
-    interactive_plot(features, labels)
+    interactive_plot(features, labels, labels)
 
 # TODO: Change logic in labelling or any different
 #  plot so it can be used in this test using predicted
 #  data from model and X_test, y_test fields
 
 if __name__ == "__main__":
-    # save_sequences("data/pretrained/tens_point/tens_test.txt", "data/pretrained/tens_sequence/tens_test.txt", 5)
-    models_test()
+    save_sequences("data/pretrained/tens_point/tens_bezdech_wdech.txt", "data/pretrained/tens_sequence/tens_bezdech_wdech.txt", 5)
+    #models_test()
