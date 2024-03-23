@@ -26,19 +26,18 @@ class SequentialModel(AbstractModel, ABC, metaclass=ABCMeta):
             )
             history = history.history
             with open(
-                "models/saves/" + self.__class__.__name__ + ".history", "w"
+                "models/saves/" + self.__class__.__name__ + ".history", "a"
             ) as file:
-                file.write(str(history))
+                file.write(str(history) + "\n")
             self.is_model_fitted = True
 
     def predict(self, X_test):
         if self.check_if_model_is_fitted():
-            self.y_predicted = np.argmax(self.model.predict(X_test), axis=1)
-            return self.y_predicted
+            return np.argmax(self.model.predict(X_test), axis=1)
 
-    def plot_prediction(self) -> None:
-        if self.check_if_model_is_fitted():
-            interactive_plot(self.X_test[:, -1, 0], self.y_predicted, self.y_test)
+    def plot_prediction(self, X_test, title=None) -> None:
+        interactive_plot(
+            self.X_test[:, -1, 0], self.predict(X_test), self.y_test, title=title)
 
     def evaluate(self, X_test=None, y_test=None):
         if X_test is None and y_test is None:
@@ -47,7 +46,9 @@ class SequentialModel(AbstractModel, ABC, metaclass=ABCMeta):
         y_pred = self.predict(X_test)
         if len(y_test.shape) > 1:
             y_test = np.argmax(self.y_test, axis=1)
-        return np.mean(y_pred == y_test)
+        result = np.mean(y_pred == y_test)
+        print("Evaluation result:", result)
+        return result
 
     def save(self, filename):
         self.model.save(filename)

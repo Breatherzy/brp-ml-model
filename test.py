@@ -29,43 +29,28 @@ def models_test():
         _model = model()
         _model.load_data("data/pretrained/tens_sequence/tens_normal.txt")
         _model.compile()
-        _model.fit(epochs=100)
+        _model.fit(100)
+        _model.plot_prediction(
+            _model.X_test, title=f"{_model.__class__.__name__} - tens_normal - {_model.evaluate():.2f}%")
+
         # pre_save = _model.evaluate()
         # _model.save("models/saves/" + _model.__class__.__name__ + ".keras")
         # print("Model saved:", _model.__class__.__name__ + ".keras")
 
-        # sleep(5)
-        # _model = model()
-        _model.load_data("data/pretrained/tens_sequence/tens_bezdech_wdech.txt")
-        _model.fit()
-
-        _model.load_data("data/pretrained/tens_sequence/tens_bezdech_wydech.txt")
-        _model.fit()
-
-        _model.load_data("data/pretrained/tens_sequence/tens_hiper.txt")
-        _model.fit()
-
-        _model.load_data("data/pretrained/tens_sequence/tens_wydech_wstrzym.txt")
-        _model.fit()
-
-        _model.load_data("data/pretrained/tens_sequence/tens_wdech_wstrzym.txt")
-        _model.fit()
+        for data in ["tens_bezdech_wdech.txt", "tens_bezdech_wydech.txt", "tens_hiper.txt", "tens_wydech_wstrzym.txt", "tens_wdech_wstrzym.txt"]:
+            _model.load_data("data/pretrained/tens_sequence/" + data)
+            _model.fit(100)
+            _model.plot_prediction(
+                _model.X_test, title=f"{_model.__class__.__name__} - {data} - {_model.evaluate():.2f}%")
 
         # _model.load("models/saves/" + _model.__class__.__name__ + ".keras")
         # after_save = _model.evaluate()
         # _model.fit()
         # after_fit = _model.evaluate()
 
-        _model.save("models/saves/" + _model.__class__.__name__ + ".keras")
-        _model.predict(_model.X_test)
-        _model.plot_prediction()
-
-        evaluation = _model.evaluate()
-
-        print("Evaluation:", evaluation)
         # print("After-save:", after_save)
         # print("After-fit:", after_fit)
-        sleep(5)
+        # sleep(5)
 
 
 def plot_raw_data():
@@ -86,7 +71,8 @@ def plot_tagged_data():
 
     from scripts.plot import interactive_plot
 
-    data = np.loadtxt("data/pretrained/tens_point/tens_test.txt", delimiter=",")
+    data = np.loadtxt(
+        "data/pretrained/tens_point/tens_test.txt", delimiter=",")
 
     features = data[:, :-1]
     labels = data[:, -1]

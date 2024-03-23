@@ -21,7 +21,7 @@ class AbstractModel(metaclass=ABCMeta):
     def load_data(self, filename, expand_dims=False, convert_to_categorical=False):
         """
         Metoda do ładowania danych z pliku i podziału na dane treningowe i testowe.
-        Każda linia pliku zawiera dane rozdielone spacją, a ostatnia wartość to etykieta.
+        Każda linia pliku zawiera dane rozdzielone przecinkiem, a ostatnia wartość to etykieta.
 
         :param filename: nazwa pliku z danymi
         :type filename: str
@@ -89,14 +89,16 @@ class AbstractModel(metaclass=ABCMeta):
         """
         Metoda do wizualizacji przewidywań modelu.
         """
-        raise NotImplementedError("Metoda plot_prediction() nie jest zaimplementowana")
+        raise NotImplementedError(
+            "Metoda plot_prediction() nie jest zaimplementowana")
 
     @abstractmethod
     def evaluate(self, X_test: np.ndarray = None, y_test: np.ndarray = None) -> float:
         """
         Metoda zwrająca wyniki ewaluacji modelu.
         """
-        raise NotImplementedError("Metoda evaluate() nie jest zaimplementowana")
+        raise NotImplementedError(
+            "Metoda evaluate() nie jest zaimplementowana")
 
     @abstractmethod
     def save(self, filename):

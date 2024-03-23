@@ -3,7 +3,7 @@ import os
 import matplotlib.pyplot as plt
 
 
-def interactive_plot(features, labels_predicted, labels_actual, window_size=150):
+def interactive_plot(features, labels_predicted, labels_actual, window_size=150, title="Interactive plot"):
     # Inicjalizacja zmiennej globalnej
     current_index = 0
 
@@ -22,13 +22,13 @@ def interactive_plot(features, labels_predicted, labels_actual, window_size=150)
 
         ax.scatter(
             range(start_index, start_index + window_size),
-            features[start_index : start_index + window_size],
-            color=colors[start_index : start_index + window_size],
+            features[start_index: start_index + window_size],
+            color=colors[start_index: start_index + window_size],
             picker=True,
         )
         ax.plot(
             range(start_index, start_index + window_size),
-            features[start_index : start_index + window_size],
+            features[start_index: start_index + window_size],
             linestyle="-",
             color="gray",
             alpha=0.5,
@@ -56,6 +56,9 @@ def interactive_plot(features, labels_predicted, labels_actual, window_size=150)
     # Pierwsze rysowanie wykresu
     plot(ax1, current_index, predicted=True)
     plot(ax2, current_index, predicted=False)
+
+    # Ustawienie tytułu wykresu
+    plt.suptitle(title)
 
     # Wyświetlenie wykresu
     plt.show()
