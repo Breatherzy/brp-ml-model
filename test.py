@@ -29,21 +29,40 @@ def models_test():
         _model = model()
         _model.load_data("data/pretrained/tens_sequence/tens_normal.txt")
         _model.compile()
-        _model.fit(epochs=10)
-        pre_save = _model.evaluate()
-        _model.save("models/saves/" + _model.__class__.__name__ + ".keras")
-        print("Model saved:", _model.__class__.__name__ + ".keras")
+        _model.fit(epochs=100)
+        # pre_save = _model.evaluate()
+        # _model.save("models/saves/" + _model.__class__.__name__ + ".keras")
+        # print("Model saved:", _model.__class__.__name__ + ".keras")
 
-        _model.plot_prediction()
         # sleep(5)
         # _model = model()
-        # _model.load_data("data/pretrained/tens_sequence/tens_test.txt")
+        _model.load_data("data/pretrained/tens_sequence/tens_bezdech_wdech.txt")
+        _model.fit()
+
+        _model.load_data("data/pretrained/tens_sequence/tens_bezdech_wydech.txt")
+        _model.fit()
+
+        _model.load_data("data/pretrained/tens_sequence/tens_hiper.txt")
+        _model.fit()
+
+        _model.load_data("data/pretrained/tens_sequence/tens_wydech_wstrzym.txt")
+        _model.fit()
+
+        _model.load_data("data/pretrained/tens_sequence/tens_wdech_wstrzym.txt")
+        _model.fit()
+
         # _model.load("models/saves/" + _model.__class__.__name__ + ".keras")
         # after_save = _model.evaluate()
         # _model.fit()
         # after_fit = _model.evaluate()
 
-        print("Pre-save:", pre_save)
+        _model.save("models/saves/" + _model.__class__.__name__ + ".keras")
+        _model.predict(_model.X_test)
+        _model.plot_prediction()
+
+        evaluation = _model.evaluate()
+
+        print("Evaluation:", evaluation)
         # print("After-save:", after_save)
         # print("After-fit:", after_fit)
         sleep(5)
@@ -74,10 +93,11 @@ def plot_tagged_data():
 
     interactive_plot(features, labels, labels)
 
+
 # TODO: Change logic in labelling or any different
 #  plot so it can be used in this test using predicted
 #  data from model and X_test, y_test fields
 
 if __name__ == "__main__":
-    save_sequences("data/pretrained/tens_point/tens_bezdech_wydech.txt", "data/pretrained/tens_sequence/tens_bezdech_wydech.txt", 5)
-    #models_test()
+    # save_sequences("data/pretrained/tens_point/tens_bezdech_wydech.txt", "data/pretrained/tens_sequence/tens_bezdech_wydech.txt", 5)
+    models_test()
