@@ -79,5 +79,5 @@ def plot_tagged_data():
 #  data from model and X_test, y_test fields
 
 if __name__ == "__main__":
-    save_sequences("data/pretrained/tens_point/tens_bezdech_wdech.txt", "data/pretrained/tens_sequence/tens_bezdech_wdech.txt", 5)
+    save_sequences("data/pretrained/tens_point/tens_bezdech_wydech.txt", "data/pretrained/tens_sequence/tens_bezdech_wydech.txt", 5)
     #models_test()

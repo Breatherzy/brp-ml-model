@@ -52,7 +52,7 @@ def save_sequences(
     for i in range(size, len(data)):
         sequence = data[i - size : i]
         taged_sequence = tags[i - size : i]
-        sequences.append(sequence + [int(sum(taged_sequence) / size) + 1])
+        sequences.append(sequence + [tags[i-size]+1])
 
     with open(file_to_save, "w") as file:
         for seq in sequences:
