@@ -8,16 +8,16 @@ from models.LSTMModel import LSTMModel
 from models.OneClassSVMModel import OneClassSVMModel
 from models.RandomForestModel import RandomForestModel
 from models.SVMModel import SVMModel
-from scripts.load_data import save_sequences
+from scripts.load_data import save_sequences, save_sequences_to_concatened, empty_file
 
 
 def models_test():
     models = [
         # BNModel,
         # Conv1DModel,
-        GRUModel,
+        # GRUModel,
         # LRModel,
-        # LSTMModel,
+        LSTMModel,
         # OneClassSVMModel,
         # RandomForestModel,
         # SVMModel,
@@ -27,21 +27,25 @@ def models_test():
         print("Testing:", model.__name__)
 
         _model = model()
-        _model.load_data("data/pretrained/tens_sequence/tens_normal.txt")
+        _model.load_data("data/pretrained/tens_sequence/tens_concatened.txt")
         _model.compile()
-        _model.fit(100)
+        _model.fit()
         _model.plot_prediction(
             _model.X_test, title=f"{_model.__class__.__name__} - tens_normal - {_model.evaluate():.2f}%")
+        print("Model evaluated:", _model.evaluate())
 
         # pre_save = _model.evaluate()
         # _model.save("models/saves/" + _model.__class__.__name__ + ".keras")
         # print("Model saved:", _model.__class__.__name__ + ".keras")
 
-        for data in ["tens_bezdech_wdech.txt", "tens_bezdech_wydech.txt", "tens_hiper.txt", "tens_wydech_wstrzym.txt", "tens_wdech_wstrzym.txt"]:
-            _model.load_data("data/pretrained/tens_sequence/" + data)
-            _model.fit(100)
-            _model.plot_prediction(
-                _model.X_test, title=f"{_model.__class__.__name__} - {data} - {_model.evaluate():.2f}%")
+        # for data in ["tens_bezdech_wdech.txt", "tens_bezdech_wydech.txt", "tens_hiper.txt", "tens_wydech_wstrzym.txt", "tens_wdech_wstrzym.txt"]:
+        #     _model.load_data("data/pretrained/tens_sequence/" + data)
+        #     _model.fit()
+        #     # _model.plot_prediction(
+        #     #     _model.X_test, title=f"{_model.__class__.__name__} - {data} - {_model.evaluate():.2f}%")
+        #
+        # _model.plot_prediction(
+        #     _model.X_test, title=f"{_model.__class__.__name__} - tens_normal - {_model.evaluate():.2f}%")
 
         # _model.load("models/saves/" + _model.__class__.__name__ + ".keras")
         # after_save = _model.evaluate()
@@ -85,5 +89,15 @@ def plot_tagged_data():
 #  data from model and X_test, y_test fields
 
 if __name__ == "__main__":
-    # save_sequences("data/pretrained/tens_point/tens_bezdech_wydech.txt", "data/pretrained/tens_sequence/tens_bezdech_wydech.txt", 5)
+    empty_file("data/pretrained/tens_sequence/tens_concatened.txt")
+    for data in ["tens_normal.txt", "tens_bezdech_wdech.txt", "tens_bezdech_wydech.txt", "tens_hiper.txt", "tens_wydech_wstrzym.txt",
+                 "tens_wdech_wstrzym.txt", "tens_bezdech.txt", "tens_test.txt",]:
+        save_sequences("data/pretrained/tens_point/" + data,
+                       "data/pretrained/tens_sequence/" + data, 5)
+
+        if data != "tens_test.txt":
+            save_sequences_to_concatened(
+                "data/pretrained/tens_sequence/" + data, "data/pretrained/tens_sequence/tens_concatened.txt"
+            )
+
     models_test()

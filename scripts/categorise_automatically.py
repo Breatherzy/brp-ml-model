@@ -18,11 +18,11 @@ def monotonicity(data, data_size=5) -> list[int]:
 
     for i in range(len(deriv) - data_size + 1):
         if abs(deriv[i]) < 0.0079:
-            result[i] = 0
-        elif deriv[i] > 0:
             result[i] = 1
+        elif deriv[i] > 0:
+            result[i] = 2
         else:
-            result[i] = -1
+            result[i] = 0
     return result
 
 
@@ -68,6 +68,15 @@ def save_tagged_data(data, monotonicity, filename):
         for i in range(len(data)):
             file.write(f"{data[i]},{monotonicity[i]}\n")
 
+
+numbers = load_data("/Users/masze/Projects/brp-ml-model/data/raw/tens/tens_bezdech.txt")
+numbers = normalize(numbers)
+number_strings = [str(str_number) for str_number in numbers]
+mono_tags = monotonicity(numbers, data_size=WINDOW_SIZE)
+
+save_tagged_data(numbers, mono_tags, "tens_bezdech" + ".txt")
+
+exit()
 
 current_directory = os.getcwd()
 desired_directory = (

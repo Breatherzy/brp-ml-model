@@ -9,12 +9,12 @@ from matplotlib.widgets import SpanSelector
 matplotlib.use("TkAgg")
 
 # Load data from txt file
-file_path = "../data/pretrained/tens_sequence/tens_test.txt"
+file_path = "../data/pretrained/tens_point/tens_bezdech.txt"
 data = np.loadtxt(file_path, delimiter=",")
 
 # Constants
 COLOR_MAP = {0.0: "red", 1.0: "green", 2.0: "blue"}
-WINDOW_SIZE = 300
+WINDOW_SIZE = 150
 SELECTION_SIZE = 5
 
 # Global variables

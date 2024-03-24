@@ -17,7 +17,7 @@ class Conv1DModel(SequentialModel):
                         filters=64,
                         kernel_size=1,
                         activation="relu",
-                        input_shape=(1, self.X.shape[2]),
+                        input_shape=(1, self.X_train.shape[2]),
                     ),
                     Flatten(),
                     Dense(50, activation="relu"),

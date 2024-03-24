@@ -12,7 +12,7 @@ class BNModel(SequentialModel):
         if self.check_if_data_is_loaded():
             self.model = Sequential(
                 [
-                    Dense(64, input_shape=(self.X.shape[1],), activation="relu"),
+                    Dense(64, input_shape=(self.X_train.shape[1],), activation="relu"),
                     BatchNormalization(),
                     Dense(64, activation="relu"),
                     BatchNormalization(),

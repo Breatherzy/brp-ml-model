@@ -51,9 +51,23 @@ def save_sequences(
     sequences = []
     for i in range(size, len(data)):
         sequence = data[i - size : i]
-        taged_sequence = tags[i - size : i]
         sequences.append(sequence + [tags[i - size] + 1])
 
     with open(file_to_save, "w") as file:
         for seq in sequences:
             file.write(",".join(map(str, seq)) + "\n")
+
+def save_sequences_to_concatened(
+    file_to_retrieve_sequences: str, file_to_save: str
+) -> None:
+    with open(file_to_retrieve_sequences) as f:
+        data = f.read().splitlines()
+
+    with open(file_to_save, "a") as file:
+        for seq in data:
+            file.write(seq.strip() + "\n")
+
+
+def empty_file(filename: str) -> None:
+    with open(filename, "w") as file:
+        pass

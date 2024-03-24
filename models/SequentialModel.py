@@ -15,7 +15,7 @@ class SequentialModel(AbstractModel, ABC, metaclass=ABCMeta):
         """
         super().compile()
 
-    def fit(self, epochs=100, batch_size=32):
+    def fit(self, epochs=400, batch_size=32):
         if self.check_if_model_is_compiled():
             history = self.model.fit(
                 self.X_train,
@@ -34,10 +34,6 @@ class SequentialModel(AbstractModel, ABC, metaclass=ABCMeta):
     def predict(self, X_test):
         if self.check_if_model_is_fitted():
             return np.argmax(self.model.predict(X_test), axis=1)
-
-    def plot_prediction(self, X_test, title=None) -> None:
-        interactive_plot(
-            self.X_test[:, -1, 0], self.predict(X_test), self.y_test, title=title)
 
     def evaluate(self, X_test=None, y_test=None):
         if X_test is None and y_test is None:

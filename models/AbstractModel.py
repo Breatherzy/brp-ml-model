@@ -4,6 +4,8 @@ import numpy as np
 from keras.src.utils import to_categorical
 from sklearn.model_selection import train_test_split
 
+from scripts.plot import interactive_plot
+
 
 class AbstractModel(metaclass=ABCMeta):
     def __init__(self):
@@ -47,8 +49,23 @@ class AbstractModel(metaclass=ABCMeta):
 
         self.X_train = data[:, :-1]
         self.y_train = data[:, -1]
+
+        zeros_column = np.zeros((self.X_train.shape[0], 1))
+        self.X_train = np.concatenate((self.X_train, zeros_column), axis=1)
+        # Add amplitude to the end of the sequence
+        for i in range(len(self.X_train)):
+            amplitude = np.max(self.X_train[i][:-1]) - np.min(self.X_train[i][:-1])
+            self.X_train[i][-1] = amplitude
+
         self.X_test = data_test[:, :-1]
         self.y_test = data_test[:, -1]
+
+        zeros_column = np.zeros((self.X_test.shape[0], 1))
+        self.X_test = np.concatenate((self.X_test, zeros_column), axis=1)
+        # Add amplitude to the end of the sequence
+        for i in range(len(self.X_test)):
+            amplitude = np.max(self.X_test[i][:-1]) - np.min(self.X_test[i][:-1])
+            self.X_test[i][-1] = amplitude
 
         if expand_dims:
             self.X_train = np.expand_dims(self.X_train, axis=1)
@@ -84,13 +101,13 @@ class AbstractModel(metaclass=ABCMeta):
 
         raise NotImplementedError("Metoda predict() nie jest zaimplementowana")
 
-    @abstractmethod
-    def plot_prediction(self):
-        """
-        Metoda do wizualizacji przewidywań modelu.
-        """
-        raise NotImplementedError(
-            "Metoda plot_prediction() nie jest zaimplementowana")
+    def plot_prediction(self, X_test, title=None) -> None:
+        try:
+            interactive_plot(
+                self.X_test[:, -1, 0], self.predict(X_test), self.y_test, title=title)
+        except Exception as e:
+            interactive_plot(
+                self.X_test[:, 0], self.predict(X_test), self.y_test, title=title)
 
     @abstractmethod
     def evaluate(self, X_test: np.ndarray = None, y_test: np.ndarray = None) -> float:
