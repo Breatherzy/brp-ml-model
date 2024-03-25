@@ -19,11 +19,11 @@ def monotonicity(data, data_size=5) -> list[int]:
 
     for i in range(len(deriv) - data_size + 1):
         if abs(deriv[i]) < 0.0079:
-            result[i] = 1
-        elif deriv[i] > 0:
-            result[i] = 2
-        else:
             result[i] = 0
+        elif deriv[i] > 0:
+            result[i] = 1
+        else:
+            result[i] = -1
     return result
 
 
@@ -80,7 +80,7 @@ for file in os.listdir(desired_directory):
         numbers = load_data(desired_directory + filename)
 
         window_length = 50
-        poly_order = 5
+        poly_order = 10
 
         filtered_data = savgol_filter(numbers, window_length, poly_order)
         numbers = normalize(filtered_data)
