@@ -1,12 +1,15 @@
 from keras.layers import BatchNormalization, Dense
 from keras.models import Sequential
 
+from models.AbstractModel import SensorType
 from models.SequentialModel import SequentialModel
 
 
 class BNModel(SequentialModel):
-    def load_data(self, filename):
-        super().load_data(filename, convert_to_categorical=True)
+    def load_data(self, filename, sensor_type=SensorType.TENSOMETER.value):
+        super().load_data(
+            filename, convert_to_categorical=True, sensor_type=sensor_type
+        )
 
     def compile(self):
         if self.check_if_data_is_loaded():

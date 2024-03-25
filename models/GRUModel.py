@@ -2,12 +2,13 @@ import numpy as np
 from keras.layers import GRU, Dense
 from keras.models import Sequential
 
+from models.AbstractModel import SensorType
 from models.SequentialModel import SequentialModel
 
 
 class GRUModel(SequentialModel):
-    def load_data(self, filename):
-        super().load_data(filename, expand_dims=True)
+    def load_data(self, filename, sensor_type=SensorType.TENSOMETER.value):
+        super().load_data(filename, expand_dims=True, sensor_type=sensor_type)
 
     def compile(self):
         if self.check_if_data_is_loaded():
@@ -18,7 +19,7 @@ class GRUModel(SequentialModel):
                         activation="relu",
                         input_shape=(self.X_train.shape[1], self.X_train.shape[2]),
                     ),
-                    Dense(50, activation="relu"),
+                    Dense(50, activation="tanh"),
                     Dense(3, activation="softmax"),
                 ]
             )

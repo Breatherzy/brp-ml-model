@@ -1,10 +1,15 @@
 from abc import ABCMeta, abstractmethod
+from enum import Enum
 
 import numpy as np
 from keras.src.utils import to_categorical
-from sklearn.model_selection import train_test_split
 
 from scripts.plot import interactive_plot
+
+
+class SensorType(Enum):
+    TENSOMETER = "tens"
+    ACCELEROMETER = "acc"
 
 
 class AbstractModel(metaclass=ABCMeta):
@@ -20,7 +25,13 @@ class AbstractModel(metaclass=ABCMeta):
         self.is_model_loaded = False
         self.is_model_fitted = False
 
-    def load_data(self, filename, expand_dims=False, convert_to_categorical=False):
+    def load_data(
+        self,
+        filename,
+        expand_dims=False,
+        convert_to_categorical=False,
+        sensor_type=SensorType.TENSOMETER.value,
+    ):
         """
         Metoda do ładowania danych z pliku i podziału na dane treningowe i testowe.
         Każda linia pliku zawiera dane rozdzielone przecinkiem, a ostatnia wartość to etykieta.
@@ -41,7 +52,9 @@ class AbstractModel(metaclass=ABCMeta):
             data = np.array(sequences)
 
         # TODO: add testing set from tens_test.txt
-        with open("data/pretrained/tens_sequence/tens_test.txt", "r") as f:
+        with open(
+            f"data/pretrained/{sensor_type}_sequence/{sensor_type}_test.txt", "r"
+        ) as f:
             sequences = []
             for line in f.readlines():
                 sequences.append([float(value) for value in line.split(",")])
@@ -102,20 +115,21 @@ class AbstractModel(metaclass=ABCMeta):
         raise NotImplementedError("Metoda predict() nie jest zaimplementowana")
 
     def plot_prediction(self, X_test, title=None) -> None:
-        try:
+        if X_test.shape[1] == 1:
             interactive_plot(
-                self.X_test[:, -1, 0], self.predict(X_test), self.y_test, title=title)
-        except Exception as e:
+                self.X_test[:, -1, 0], self.predict(X_test), self.y_test, title=title
+            )
+        else:
             interactive_plot(
-                self.X_test[:, 0], self.predict(X_test), self.y_test, title=title)
+                self.X_test[:, 0], self.predict(X_test), self.y_test, title=title
+            )
 
     @abstractmethod
     def evaluate(self, X_test: np.ndarray = None, y_test: np.ndarray = None) -> float:
         """
         Metoda zwrająca wyniki ewaluacji modelu.
         """
-        raise NotImplementedError(
-            "Metoda evaluate() nie jest zaimplementowana")
+        raise NotImplementedError("Metoda evaluate() nie jest zaimplementowana")
 
     @abstractmethod
     def save(self, filename):

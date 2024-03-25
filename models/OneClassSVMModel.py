@@ -14,7 +14,7 @@ class OneClassSVMModel(AbstractModel):
 
     def fit(self):
         if self.check_if_model_is_compiled():
-            self.model.fit(self.X)
+            self.model.fit(self.X_train)
             self.is_model_fitted = True
 
     def predict(self, X_test):

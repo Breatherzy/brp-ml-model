@@ -10,7 +10,7 @@ class SVMModel(AbstractModel):
     def compile(self):
         if self.check_if_data_is_loaded():
             scaler = StandardScaler()
-            self.X = scaler.fit_transform(self.X)
+            self.X_train = scaler.fit_transform(self.X_train)
             self.model = SVC(gamma="scale")
 
     def fit(self):

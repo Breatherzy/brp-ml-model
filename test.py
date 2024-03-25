@@ -1,5 +1,4 @@
-from time import sleep
-
+from models.AbstractModel import SensorType
 from models.BNModel import BNModel
 from models.Conv1DModel import Conv1DModel
 from models.GRUModel import GRUModel
@@ -10,51 +9,51 @@ from models.RandomForestModel import RandomForestModel
 from models.SVMModel import SVMModel
 from scripts.load_data import save_sequences, save_sequences_to_concatened, empty_file
 
+BASE_SENSOR = SensorType.TENSOMETER.value
+SENSOR_SIZE = 5
+
 
 def models_test():
     models = [
         # BNModel,
         # Conv1DModel,
-        # GRUModel,
+        GRUModel,
         # LRModel,
-        LSTMModel,
+        # LSTMModel,
         # OneClassSVMModel,
         # RandomForestModel,
         # SVMModel,
     ]
+    with open(f"models/saves/{BASE_SENSOR}_evaluation.txt", "w") as file:
+        for model in models:
+            print("Testing:", model.__name__)
 
-    for model in models:
-        print("Testing:", model.__name__)
+            _model = model()
+            _model.load_data(
+                filename=f"data/pretrained/{BASE_SENSOR}_sequence/{BASE_SENSOR}_concatened.txt",
+                sensor_type=BASE_SENSOR,
+            )
+            _model.compile()
+            _model.fit(epochs=183)
+            # _model.plot_prediction(
+            #     _model.X_test, title=f"{_model.__class__.__name__} - {BASE_SENSOR}_concatened - {_model.evaluate():.2f}%")
+            # file.write(f"{model.__name__} - {BASE_SENSOR}_concatened - {_model.evaluate()*100:.2f}%\n")
+            print("Model evaluated:", _model.evaluate())
 
-        _model = model()
-        _model.load_data("data/pretrained/tens_sequence/tens_concatened.txt")
-        _model.compile()
-        _model.fit()
-        _model.plot_prediction(
-            _model.X_test, title=f"{_model.__class__.__name__} - tens_normal - {_model.evaluate():.2f}%")
-        print("Model evaluated:", _model.evaluate())
+            _model.save(
+                f"models/saves/{BASE_SENSOR}/" + _model.__class__.__name__ + ".keras"
+            )
+            # print("Model saved:", _model.__class__.__name__ + ".keras")
 
-        # pre_save = _model.evaluate()
-        # _model.save("models/saves/" + _model.__class__.__name__ + ".keras")
-        # print("Model saved:", _model.__class__.__name__ + ".keras")
+            # for data in ["_normal.txt", "_bezdech_wdech.txt", "_bezdech_wydech.txt", "_hiper.txt", "_wydech_wstrzym.txt",
+            #      "_wdech_wstrzym.txt", "_bezdech.txt",]:
+            #     _model.load_data(filename=f"data/pretrained/{BASE_SENSOR}_sequence/{BASE_SENSOR}" + data, sensor_type=SensorType.ACCELEROMETER.value)
+            #
+            #     _model.fit()
 
-        # for data in ["tens_bezdech_wdech.txt", "tens_bezdech_wydech.txt", "tens_hiper.txt", "tens_wydech_wstrzym.txt", "tens_wdech_wstrzym.txt"]:
-        #     _model.load_data("data/pretrained/tens_sequence/" + data)
-        #     _model.fit()
-        #     # _model.plot_prediction(
-        #     #     _model.X_test, title=f"{_model.__class__.__name__} - {data} - {_model.evaluate():.2f}%")
-        #
-        # _model.plot_prediction(
-        #     _model.X_test, title=f"{_model.__class__.__name__} - tens_normal - {_model.evaluate():.2f}%")
-
-        # _model.load("models/saves/" + _model.__class__.__name__ + ".keras")
-        # after_save = _model.evaluate()
-        # _model.fit()
-        # after_fit = _model.evaluate()
-
-        # print("After-save:", after_save)
-        # print("After-fit:", after_fit)
-        # sleep(5)
+            # print("Model evaluated:", _model.evaluate())
+            # _model.plot_prediction(
+            #     _model.X_test, title=f"{_model.__class__.__name__} - tens_normal - {_model.evaluate():.2f}%")
 
 
 def plot_raw_data():
@@ -75,8 +74,7 @@ def plot_tagged_data():
 
     from scripts.plot import interactive_plot
 
-    data = np.loadtxt(
-        "data/pretrained/tens_point/tens_test.txt", delimiter=",")
+    data = np.loadtxt("data/pretrained/tens_point/tens_test.txt", delimiter=",")
 
     features = data[:, :-1]
     labels = data[:, -1]
@@ -89,15 +87,27 @@ def plot_tagged_data():
 #  data from model and X_test, y_test fields
 
 if __name__ == "__main__":
-    empty_file("data/pretrained/tens_sequence/tens_concatened.txt")
-    for data in ["tens_normal.txt", "tens_bezdech_wdech.txt", "tens_bezdech_wydech.txt", "tens_hiper.txt", "tens_wydech_wstrzym.txt",
-                 "tens_wdech_wstrzym.txt", "tens_bezdech.txt", "tens_test.txt",]:
-        save_sequences("data/pretrained/tens_point/" + data,
-                       "data/pretrained/tens_sequence/" + data, 5)
+    empty_file(f"data/pretrained/{BASE_SENSOR}_sequence/{BASE_SENSOR}_concatened.txt")
+    for data in [
+        "_normal.txt",
+        "_bezdech_wdech.txt",
+        "_bezdech_wydech.txt",
+        "_hiper.txt",
+        "_wydech_wstrzym.txt",
+        "_wdech_wstrzym.txt",
+        "_bezdech.txt",
+        "_test.txt",
+    ]:
+        save_sequences(
+            f"data/pretrained/{BASE_SENSOR}_point/{BASE_SENSOR}" + data,
+            f"data/pretrained/{BASE_SENSOR}_sequence/{BASE_SENSOR}" + data,
+            SENSOR_SIZE,
+        )
 
-        if data != "tens_test.txt":
+        if data != "_test.txt":
             save_sequences_to_concatened(
-                "data/pretrained/tens_sequence/" + data, "data/pretrained/tens_sequence/tens_concatened.txt"
+                f"data/pretrained/{BASE_SENSOR}_sequence/{BASE_SENSOR}" + data,
+                f"data/pretrained/{BASE_SENSOR}_sequence/{BASE_SENSOR}_concatened.txt",
             )
 
     models_test()

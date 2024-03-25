@@ -57,6 +57,7 @@ def save_sequences(
         for seq in sequences:
             file.write(",".join(map(str, seq)) + "\n")
 
+
 def save_sequences_to_concatened(
     file_to_retrieve_sequences: str, file_to_save: str
 ) -> None:

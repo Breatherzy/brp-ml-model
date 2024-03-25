@@ -69,10 +69,10 @@ def save_tagged_data(data, monotonicity, filename):
         for i in range(len(data)):
             file.write(f"{data[i]},{monotonicity[i]}\n")
 
+
 current_directory = os.getcwd()
 desired_directory = (
-    os.path.dirname(os.path.dirname(current_directory))
-    + "/brp-ml-model/data/raw/acc/"
+    os.path.dirname(os.path.dirname(current_directory)) + "/brp-ml-model/data/raw/acc/"
 )
 for file in os.listdir(desired_directory):
     filename = os.fsdecode(file)

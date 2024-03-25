@@ -3,7 +3,11 @@ import os
 import matplotlib.pyplot as plt
 
 
-def interactive_plot(features, labels_predicted, labels_actual, window_size=150, title="Interactive plot"):
+def interactive_plot(
+    features, labels_predicted, labels_actual, window_size=150, title="Interactive plot"
+):
+    if len(labels_actual.shape) > 1 and labels_actual.shape[1] == 3:
+        labels_actual = labels_actual.argmax(axis=1)
     # Inicjalizacja zmiennej globalnej
     current_index = 0
 
@@ -22,13 +26,13 @@ def interactive_plot(features, labels_predicted, labels_actual, window_size=150,
 
         ax.scatter(
             range(start_index, start_index + window_size),
-            features[start_index: start_index + window_size],
-            color=colors[start_index: start_index + window_size],
+            features[start_index : start_index + window_size],
+            color=colors[start_index : start_index + window_size],
             picker=True,
         )
         ax.plot(
             range(start_index, start_index + window_size),
-            features[start_index: start_index + window_size],
+            features[start_index : start_index + window_size],
             linestyle="-",
             color="gray",
             alpha=0.5,

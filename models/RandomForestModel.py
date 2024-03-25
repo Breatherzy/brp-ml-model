@@ -10,7 +10,7 @@ from scripts.plot import interactive_plot
 class RandomForestModel(AbstractModel):
     def compile(self):
         if self.check_if_data_is_loaded():
-            self.model = RandomForestClassifier(random_state=42)
+            self.model = RandomForestClassifier(random_state=42, max_depth=10)
 
     def fit(self, weights=None):
         if self.check_if_model_is_compiled():
@@ -34,7 +34,8 @@ class RandomForestModel(AbstractModel):
 
     def plot_prediction(self, X_test, title=None):
         interactive_plot(
-            self.X_test[:, 0], self.predict(X_test), self.y_test, title=title)
+            self.X_test[:, 0], self.predict(X_test), self.y_test, title=title
+        )
 
     def save(self, filename):
         dump(self.model, filename)

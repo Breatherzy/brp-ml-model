@@ -1,8 +1,7 @@
 from abc import ABC, ABCMeta, abstractmethod
-
+import tensorflow as tf
 import numpy as np
-from keras.models import load_model
-
+from tensorflow.keras.models import load_model
 from models.AbstractModel import AbstractModel
 from scripts.plot import interactive_plot
 
@@ -15,7 +14,7 @@ class SequentialModel(AbstractModel, ABC, metaclass=ABCMeta):
         """
         super().compile()
 
-    def fit(self, epochs=400, batch_size=32):
+    def fit(self, epochs=200, batch_size=500):
         if self.check_if_model_is_compiled():
             history = self.model.fit(
                 self.X_train,
@@ -47,7 +46,15 @@ class SequentialModel(AbstractModel, ABC, metaclass=ABCMeta):
         return result
 
     def save(self, filename):
-        self.model.save(filename)
+        converter = tf.lite.TFLiteConverter.from_keras_model(self.model)
+        converter._experimental_lower_tensor_list_ops = False
+        converter.target_spec.supported_ops = [
+            tf.lite.OpsSet.TFLITE_BUILTINS,
+            tf.lite.OpsSet.SELECT_TF_OPS,
+        ]
+        tflite_model = converter.convert()
+        with open(filename + ".tflite", "wb") as f:
+            f.write(tflite_model)
 
     def load(self, filename):
         self.model = load_model(filename)
