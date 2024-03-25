@@ -9,7 +9,7 @@ from matplotlib.widgets import SpanSelector
 matplotlib.use("TkAgg")
 
 # Load data from txt file
-file_path = "../data/pretrained/acc_point/acc_normal.txt"
+file_path = "../data/pretrained/acc_point/acc_wdech_wstrzym.txt"
 data = np.loadtxt(file_path, delimiter=",")
 
 # Constants
@@ -78,8 +78,8 @@ def choose_color(initial_color):
 
     frame = Frame(root)
     frame.pack(padx=10, pady=10)
-    BREATH_STATE = {0.0: "BREATH OUT", -1.0: "NO BREATH", 1.0: "BREATH IN"}
-    for label, color in {0.0: "green", -1.0: "red", 1.0: "blue"}.items():
+    BREATH_STATE = {-1.0: "BREATH OUT", 0.0: "NO BREATH", 1.0: "BREATH IN"}
+    for label, color in {-1.0: "red", 0.0: "green", 1.0: "blue"}.items():
         button_label = BREATH_STATE[label]
         button = Button(
             frame,
