@@ -1,16 +1,17 @@
 from abc import ABC, ABCMeta, abstractmethod
-import tensorflow as tf
+
 import numpy as np
+import tensorflow as tf
 from tensorflow.keras.models import load_model
+
 from models.AbstractModel import AbstractModel
-from scripts.plot import interactive_plot
 
 
 class SequentialModel(AbstractModel, ABC, metaclass=ABCMeta):
     @abstractmethod
     def compile(self):
         """
-        Metoda do kompilowania modelu sekwencyjnego.
+        Method for compiling the sequential model.
         """
         super().compile()
 
@@ -25,7 +26,7 @@ class SequentialModel(AbstractModel, ABC, metaclass=ABCMeta):
             )
             history = history.history
             with open(
-                "models/saves/" + self.__class__.__name__ + ".history", "a"
+                    "models/saves/" + self.__class__.__name__ + ".history", "a"
             ) as file:
                 file.write(str(history) + "\n")
             self.is_model_fitted = True

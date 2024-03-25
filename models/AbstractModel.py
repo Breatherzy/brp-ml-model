@@ -26,24 +26,26 @@ class AbstractModel(metaclass=ABCMeta):
         self.is_model_fitted = False
 
     def load_data(
-        self,
-        filename,
-        expand_dims=False,
-        convert_to_categorical=False,
-        sensor_type=SensorType.TENSOMETER.value,
+            self,
+            filename,
+            expand_dims=False,
+            convert_to_categorical=False,
+            sensor_type=SensorType.TENSOMETER.value,
     ):
         """
-        Metoda do ładowania danych z pliku i podziału na dane treningowe i testowe.
-        Każda linia pliku zawiera dane rozdzielone przecinkiem, a ostatnia wartość to etykieta.
+        Method for loading data from a file and splitting it into training and testing data.
+        Each line of the file contains comma-separated data, with the last value being the label.
 
-        :param filename: nazwa pliku z danymi
+        :param filename: name of the data file
         :type filename: str
 
-        :param expand_dims: czy dane wejściowe mają być rozszerzone o jedną osie
+        :param expand_dims: whether input data should be expanded by one axis
         :type expand_dims: bool
 
-        :param convert_to_categorical: czy etykiety mają być przekształcone do postaci kategorycznej
+        :param convert_to_categorical: whether labels should be transformed into categorical form
         :type convert_to_categorical: bool
+
+        :param sensor_type: type of sensor
         """
         with open(filename, "r") as f:
             sequences = []
@@ -53,7 +55,7 @@ class AbstractModel(metaclass=ABCMeta):
 
         # TODO: add testing set from tens_test.txt
         with open(
-            f"data/pretrained/{sensor_type}_sequence/{sensor_type}_test.txt", "r"
+                f"data/pretrained/{sensor_type}_sequence/{sensor_type}_test.txt", "r"
         ) as f:
             sequences = []
             for line in f.readlines():
@@ -94,25 +96,24 @@ class AbstractModel(metaclass=ABCMeta):
     @abstractmethod
     def compile(self):
         """
-        Metoda do kompilowania modelu.
+        Method for compiling the model.
         """
-        raise NotImplementedError("Metoda compile() nie jest zaimplementowana")
+        raise NotImplementedError("The compile() method is not implemented")
 
     @abstractmethod
     def fit(self):
         """
-        Metoda do dopasowywania modelu do danych.
-        Powinna zapisywać historię uczenia modelu.
+        Method for fitting the model to data.
+        It should save the training history of the model.
         """
-        raise NotImplementedError("Metoda fit() nie jest zaimplementowana")
+        raise NotImplementedError("The fit() method is not implemented")
 
     @abstractmethod
     def predict(self, X_test: np.ndarray) -> np.ndarray:
         """
-        Metoda do przewidywania na nowych danych.
+        Method for predicting on new data.
         """
-
-        raise NotImplementedError("Metoda predict() nie jest zaimplementowana")
+        raise NotImplementedError("The predict() method is not implemented")
 
     def plot_prediction(self, X_test, title=None) -> None:
         if X_test.shape[1] == 1:
@@ -127,49 +128,49 @@ class AbstractModel(metaclass=ABCMeta):
     @abstractmethod
     def evaluate(self, X_test: np.ndarray = None, y_test: np.ndarray = None) -> float:
         """
-        Metoda zwrająca wyniki ewaluacji modelu.
+        Method returning the evaluation results of the model.
         """
-        raise NotImplementedError("Metoda evaluate() nie jest zaimplementowana")
+        raise NotImplementedError("The evaluate() method is not implemented")
 
     @abstractmethod
     def save(self, filename):
         """
-        Metoda do zapisywania modelu do pliku.
+        Method for saving the model to a file.
         """
-        raise NotImplementedError("Metoda save() nie jest zaimplementowana")
+        raise NotImplementedError("The save() method is not implemented")
 
     @abstractmethod
     def load(self, filename):
         """
-        Metoda do wczytywania modelu z pliku.
-        Ustawia atrybut is_model_loaded na True.
+        Method for loading the model from a file.
+        Sets the is_model_loaded attribute to True.
         """
-        raise NotImplementedError("Metoda load() nie jest zaimplementowana")
+        raise NotImplementedError("The load() method is not implemented")
 
     def check_if_model_is_compiled(self):
         """
-        Metoda do sprawdzania czy model jest skompilowany.
+        Method for checking if the model is compiled.
         """
         if self.model is None and not self.is_model_loaded:
-            raise ValueError("Model nie jest skompilowany")
+            raise ValueError("The model is not compiled")
         return True
 
     def check_if_model_is_fitted(self):
         """
-        Metoda do sprawdzania czy model jest skompilowany.
+        Method for checking if the model is fitted.
         """
         if not self.is_model_fitted and not self.is_model_loaded:
             raise ValueError(
-                "Dane nie są podzielone na zbiór treningowy i testowy. Użyj metody fit() przed ewaluacją modelu"
+                "Data is not split into training and testing sets. Use the fit() method before evaluating the model"
             )
         return True
 
     def check_if_data_is_loaded(self):
         """
-        Metoda do sprawdzania czy dane są wczytane.
+        Method for checking if data is loaded.
         """
         if self.X_train is None or self.y_train is None:
             raise ValueError(
-                "Dane nie są wczytane. Użyj metody load_data() przed kompilacją modelu"
+                "Data is not loaded. Use the load_data() method before compiling the model"
             )
         return True

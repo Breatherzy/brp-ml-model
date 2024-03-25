@@ -1,4 +1,3 @@
-import numpy as np
 from joblib import dump, load
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, classification_report

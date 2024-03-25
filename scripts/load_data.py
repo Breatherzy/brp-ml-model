@@ -44,13 +44,13 @@ def save_data(filname, data):
 
 
 def save_sequences(
-    file_to_retrieve_sequences: str, file_to_save: str, size: int
+        file_to_retrieve_sequences: str, file_to_save: str, size: int
 ) -> None:
     with open(file_to_retrieve_sequences):
         data, tags = load_tagged_data(file_to_retrieve_sequences)
     sequences = []
     for i in range(size, len(data)):
-        sequence = data[i - size : i]
+        sequence = data[i - size: i]
         sequences.append(sequence + [tags[i - size] + 1])
 
     with open(file_to_save, "w") as file:
@@ -58,8 +58,8 @@ def save_sequences(
             file.write(",".join(map(str, seq)) + "\n")
 
 
-def save_sequences_to_concatened(
-    file_to_retrieve_sequences: str, file_to_save: str
+def save_sequences_to_concatenated(
+        file_to_retrieve_sequences: str, file_to_save: str
 ) -> None:
     with open(file_to_retrieve_sequences) as f:
         data = f.read().splitlines()

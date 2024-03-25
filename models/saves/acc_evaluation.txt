@@ -1,0 +1,1 @@
+GRUModel - acc_concatenated - 73.42%

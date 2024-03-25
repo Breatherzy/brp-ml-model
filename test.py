@@ -1,16 +1,9 @@
 from models.AbstractModel import SensorType
-from models.BNModel import BNModel
-from models.Conv1DModel import Conv1DModel
 from models.GRUModel import GRUModel
-from models.LRModel import LRModel
-from models.LSTMModel import LSTMModel
-from models.OneClassSVMModel import OneClassSVMModel
-from models.RandomForestModel import RandomForestModel
-from models.SVMModel import SVMModel
-from scripts.load_data import save_sequences, save_sequences_to_concatened, empty_file
+from scripts.load_data import save_sequences, save_sequences_to_concatenated, empty_file
 
-BASE_SENSOR = SensorType.TENSOMETER.value
-SENSOR_SIZE = 5
+BASE_SENSOR = SensorType.ACCELEROMETER.value
+SENSOR_SIZE = 11
 
 
 def models_test():
@@ -27,33 +20,34 @@ def models_test():
     with open(f"models/saves/{BASE_SENSOR}_evaluation.txt", "w") as file:
         for model in models:
             print("Testing:", model.__name__)
-
             _model = model()
             _model.load_data(
-                filename=f"data/pretrained/{BASE_SENSOR}_sequence/{BASE_SENSOR}_concatened.txt",
+                filename=f"data/pretrained/{BASE_SENSOR}_sequence/{BASE_SENSOR}_concatenated.txt",
                 sensor_type=BASE_SENSOR,
             )
             _model.compile()
             _model.fit(epochs=183)
             # _model.plot_prediction(
-            #     _model.X_test, title=f"{_model.__class__.__name__} - {BASE_SENSOR}_concatened - {_model.evaluate():.2f}%")
-            # file.write(f"{model.__name__} - {BASE_SENSOR}_concatened - {_model.evaluate()*100:.2f}%\n")
+            #     _model.X_test, title=f"{_model.__class__.__name__} - {BASE_SENSOR}_concatenated -
+            #     {_model.evaluate()*100:.2f}%")
             print("Model evaluated:", _model.evaluate())
-
             _model.save(
-                f"models/saves/{BASE_SENSOR}/" + _model.__class__.__name__ + ".keras"
+                f"models/saves/{BASE_SENSOR}/{_model.__class__.__name__}_{BASE_SENSOR}"
             )
-            # print("Model saved:", _model.__class__.__name__ + ".keras")
-
-            # for data in ["_normal.txt", "_bezdech_wdech.txt", "_bezdech_wydech.txt", "_hiper.txt", "_wydech_wstrzym.txt",
-            #      "_wdech_wstrzym.txt", "_bezdech.txt",]:
-            #     _model.load_data(filename=f"data/pretrained/{BASE_SENSOR}_sequence/{BASE_SENSOR}" + data, sensor_type=SensorType.ACCELEROMETER.value)
+            file.write(
+                f"{_model.__class__.__name__} - {BASE_SENSOR}_concatenated - {_model.evaluate()*100:.2f}%\n"
+            )
+            # for data in ["_normal.txt", "_bezdech_wdech.txt", "_bezdech_wydech.txt", "_hiper.txt",
+            #              "_wydech_wstrzym.txt", "_wdech_wstrzym.txt", "_bezdech.txt", ]:
+            #     _model.load_data(filename=f"data/pretrained/{BASE_SENSOR}_sequence/{BASE_SENSOR}" + data,
+            #                      sensor_type=SensorType.ACCELEROMETER.value)
             #
             #     _model.fit()
 
             # print("Model evaluated:", _model.evaluate())
             # _model.plot_prediction(
-            #     _model.X_test, title=f"{_model.__class__.__name__} - tens_normal - {_model.evaluate():.2f}%")
+            #     _model.X_test, title=f"{_model.__class__.__name__} - {BASE_SENSOR}_normal -
+            #     {_model.evaluate()*100:.2f}%")
 
 
 def plot_raw_data():
@@ -61,7 +55,7 @@ def plot_raw_data():
 
     from scripts.plot import interactive_plot
 
-    data = np.loadtxt("data/raw/tens/tens_test.txt")
+    data = np.loadtxt(f"data/raw/{BASE_SENSOR}/{BASE_SENSOR}_test.txt")
 
     features = data
     labels = np.zeros(len(data))
@@ -74,7 +68,7 @@ def plot_tagged_data():
 
     from scripts.plot import interactive_plot
 
-    data = np.loadtxt("data/pretrained/tens_point/tens_test.txt", delimiter=",")
+    data = np.loadtxt(f"data/pretrained/{BASE_SENSOR}_point/{BASE_SENSOR}_test.txt", delimiter=",")
 
     features = data[:, :-1]
     labels = data[:, -1]
@@ -87,7 +81,7 @@ def plot_tagged_data():
 #  data from model and X_test, y_test fields
 
 if __name__ == "__main__":
-    empty_file(f"data/pretrained/{BASE_SENSOR}_sequence/{BASE_SENSOR}_concatened.txt")
+    empty_file(f"data/pretrained/{BASE_SENSOR}_sequence/{BASE_SENSOR}_concatenated.txt")
     for data in [
         "_normal.txt",
         "_bezdech_wdech.txt",
@@ -105,9 +99,9 @@ if __name__ == "__main__":
         )
 
         if data != "_test.txt":
-            save_sequences_to_concatened(
+            save_sequences_to_concatenated(
                 f"data/pretrained/{BASE_SENSOR}_sequence/{BASE_SENSOR}" + data,
-                f"data/pretrained/{BASE_SENSOR}_sequence/{BASE_SENSOR}_concatened.txt",
+                f"data/pretrained/{BASE_SENSOR}_sequence/{BASE_SENSOR}_concatenated.txt",
             )
 
     models_test()
