@@ -47,6 +47,7 @@ class SequentialModel(AbstractModel, ABC, metaclass=ABCMeta):
         return result
 
     def save(self, filename):
+        self.model.save(filename + ".keras")
         converter = tf.lite.TFLiteConverter.from_keras_model(self.model)
         converter._experimental_lower_tensor_list_ops = False
         converter.target_spec.supported_ops = [

@@ -8,8 +8,8 @@ from scripts.plot import interactive_plot
 
 
 class SensorType(Enum):
-    TENSOMETER = "tens"
-    ACCELEROMETER = "acc"
+    TENSOMETER = {"name": "tens", "size": 6}
+    ACCELEROMETER = {"name": "acc", "size": 12}
 
 
 class AbstractModel(metaclass=ABCMeta):
@@ -30,7 +30,7 @@ class AbstractModel(metaclass=ABCMeta):
             filename,
             expand_dims=False,
             convert_to_categorical=False,
-            sensor_type=SensorType.TENSOMETER.value,
+            sensor_type=str
     ):
         """
         Method for loading data from a file and splitting it into training and testing data.
@@ -45,7 +45,7 @@ class AbstractModel(metaclass=ABCMeta):
         :param convert_to_categorical: whether labels should be transformed into categorical form
         :type convert_to_categorical: bool
 
-        :param sensor_type: type of sensor
+        :param sensor_type: name of sensor
         """
         with open(filename, "r") as f:
             sequences = []
@@ -53,7 +53,6 @@ class AbstractModel(metaclass=ABCMeta):
                 sequences.append([float(value) for value in line.split(",")])
             data = np.array(sequences)
 
-        # TODO: add testing set from tens_test.txt
         with open(
                 f"data/pretrained/{sensor_type}_sequence/{sensor_type}_test.txt", "r"
         ) as f:
@@ -65,22 +64,8 @@ class AbstractModel(metaclass=ABCMeta):
         self.X_train = data[:, :-1]
         self.y_train = data[:, -1]
 
-        zeros_column = np.zeros((self.X_train.shape[0], 1))
-        self.X_train = np.concatenate((self.X_train, zeros_column), axis=1)
-        # Add amplitude to the end of the sequence
-        for i in range(len(self.X_train)):
-            amplitude = np.max(self.X_train[i][:-1]) - np.min(self.X_train[i][:-1])
-            self.X_train[i][-1] = amplitude
-
         self.X_test = data_test[:, :-1]
         self.y_test = data_test[:, -1]
-
-        zeros_column = np.zeros((self.X_test.shape[0], 1))
-        self.X_test = np.concatenate((self.X_test, zeros_column), axis=1)
-        # Add amplitude to the end of the sequence
-        for i in range(len(self.X_test)):
-            amplitude = np.max(self.X_test[i][:-1]) - np.min(self.X_test[i][:-1])
-            self.X_test[i][-1] = amplitude
 
         if expand_dims:
             self.X_train = np.expand_dims(self.X_train, axis=1)
@@ -115,7 +100,8 @@ class AbstractModel(metaclass=ABCMeta):
         """
         raise NotImplementedError("The predict() method is not implemented")
 
-    def plot_prediction(self, X_test, title=None) -> None:
+    def plot_prediction(self, X_test, name=None) -> None:
+        title = f"{self.__class__.__name__} - {name} - {self.evaluate() * 100:.2f}%"
         if X_test.shape[1] == 1:
             interactive_plot(
                 self.X_test[:, -1, 0], self.predict(X_test), self.y_test, title=title
