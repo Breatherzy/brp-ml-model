@@ -15,7 +15,7 @@ class SequentialModel(AbstractModel, ABC, metaclass=ABCMeta):
         """
         super().compile()
 
-    def fit(self, epochs=200, batch_size=500):
+    def fit(self, epochs=200, batch_size=500, sensor_type="hist"):
         if self.check_if_model_is_compiled():
             history = self.model.fit(
                 self.X_train,
@@ -26,7 +26,7 @@ class SequentialModel(AbstractModel, ABC, metaclass=ABCMeta):
             )
             history = history.history
             with open(
-                    "models/saves/" + self.__class__.__name__ + ".history", "a"
+                    f"models/saves/{sensor_type}/{self.__class__.__name__}.history", "a"
             ) as file:
                 file.write(str(history) + "\n")
             self.is_model_fitted = True
