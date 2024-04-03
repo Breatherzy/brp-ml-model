@@ -81,7 +81,7 @@ def prepare_data_for_training(sensor: SensorType) -> None:
 
     input_size = sensor.value["size"] - 1
     sensor_type = sensor.value["name"]
-    empty_file(f"data/pretrained/{sensor_type}_sequence/{sensor_type}_concatenated.txt")
+    empty_file(f"data/labelled/{sensor_type}_sequence/{sensor_type}_concatenated.txt")
     for data in [
         "_normal.txt",
         "_bezdech_wdech.txt",
@@ -93,13 +93,13 @@ def prepare_data_for_training(sensor: SensorType) -> None:
         "_test.txt",
     ]:
         save_sequences(
-            f"data/pretrained/{sensor_type}_point/{sensor_type}" + data,
-            f"data/pretrained/{sensor_type}_sequence/{sensor_type}" + data,
+            f"data/labelled/{sensor_type}_point/{sensor_type}" + data,
+            f"data/labelled/{sensor_type}_sequence/{sensor_type}" + data,
             input_size,
         )
 
         if data != "_test.txt":
             save_sequences_to_concatenated(
-                f"data/pretrained/{sensor_type}_sequence/{sensor_type}" + data,
-                f"data/pretrained/{sensor_type}_sequence/{sensor_type}_concatenated.txt",
+                f"data/labelled/{sensor_type}_sequence/{sensor_type}" + data,
+                f"data/labelled/{sensor_type}_sequence/{sensor_type}_concatenated.txt",
             )

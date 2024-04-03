@@ -9,7 +9,7 @@ from matplotlib.widgets import SpanSelector
 matplotlib.use("TkAgg")
 
 # Load data from txt file
-file_path = "../data/pretrained/acc_point/acc_bezdech.txt"
+file_path = "../data/labelled/acc_point/acc_bezdech.txt"
 data = np.loadtxt(file_path, delimiter=",")
 
 # Constants

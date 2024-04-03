@@ -16,7 +16,7 @@ if __name__ == "__main__":
 
     model = LSTMModel()
     model.load_data(
-        filename=f"data/pretrained/{SENSOR_NAME}_sequence/{SENSOR_NAME}_concatenated.txt",
+        filename=f"data/labelled/{SENSOR_NAME}_sequence/{SENSOR_NAME}_concatenated.txt",
         sensor_type=f"{SENSOR_NAME}",
     )
     model.compile()
@@ -34,7 +34,7 @@ def evaluate_epochs():
     for i in range(10, 101, 10):
         _model = LSTMModel()
         _model.load_data(
-            filename=f"data/pretrained/{SENSOR_NAME}_sequence/{SENSOR_NAME}_concatenated.txt",
+            filename=f"data/labelled/{SENSOR_NAME}_sequence/{SENSOR_NAME}_concatenated.txt",
             sensor_type=f"{SENSOR_NAME}",
         )
         _model.compile()

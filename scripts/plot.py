@@ -69,7 +69,7 @@ def plot_raw_data(sensor_type: str):
 
 
 def plot_tagged_data(sensor_type: str):
-    data = np.loadtxt(f"data/pretrained/{sensor_type}_point/{sensor_type}_test.txt", delimiter=",")
+    data = np.loadtxt(f"data/labelled/{sensor_type}_point/{sensor_type}_test.txt", delimiter=",")
 
     features = data[:, :-1]
     labels = data[:, -1]

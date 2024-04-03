@@ -65,7 +65,7 @@ def find_monotonicity_changes(array, window_size=WINDOW_SIZE):
 
 
 def save_tagged_data(data, monotonicity, filename):
-    with open("../data/pretrained/acc_point/" + filename, "w") as file:
+    with open("../data/labelled/acc_point/" + filename, "w") as file:
         for i in range(len(data)):
             file.write(f"{data[i]},{monotonicity[i]}\n")
 
