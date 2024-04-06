@@ -64,27 +64,35 @@ def find_monotonicity_changes(array, window_size=WINDOW_SIZE):
     return results
 
 
-def save_tagged_data(data, monotonicity, filename):
-    with open("../data/labelled/acc_point/" + filename, "w") as file:
+def save_tagged_data(data: list[float], monotonicity: list[float], time: list[float], filename: str) -> None:
+    if "tens" in filename:
+        directory = "../data/pretrained/tens/"
+    else:
+        directory = "../data/pretrained/acc/"
+    with open(directory + filename, "w") as file:
         for i in range(len(data)):
-            file.write(f"{data[i]},{monotonicity[i]}\n")
+            file.write(f"{data[i]},{monotonicity[i]},{time[i]}\n")
 
 
 current_directory = os.getcwd()
 desired_directory = (
-        os.path.dirname(os.path.dirname(current_directory)) + "/brp-ml-model/data/raw/acc/"
+        os.path.dirname(os.path.dirname(current_directory)) + "/brp-ml-model/data/raw/tens/"
 )
 for file in os.listdir(desired_directory):
     filename = os.fsdecode(file)
-    if filename.endswith(".txt"):
-        numbers = load_data(desired_directory + filename)
+    if filename.endswith(".csv"):
+        times, numbers = load_data(desired_directory + filename)
 
-        window_length = 50
-        poly_order = 10
+        if desired_directory[-4:] == "acc/":
+            window_length = 50
+            poly_order = 10
 
-        filtered_data = savgol_filter(numbers, window_length, poly_order)
-        numbers = normalize(filtered_data)
-        number_strings = [str(str_number) for str_number in numbers]
+            numbers = savgol_filter(numbers, window_length, poly_order)
+        numbers = normalize(numbers)
+
+        # if desired_directory[-4:] == "acc/":
+        #     # Rotate numbers within the range of -1 to 1
+        #     numbers = [-x for x in numbers]
         mono_tags = monotonicity(numbers, data_size=WINDOW_SIZE)
 
-        save_tagged_data(numbers, mono_tags, filename[:-4] + ".txt")
+        save_tagged_data(numbers, mono_tags, times, filename[:-4] + ".txt")

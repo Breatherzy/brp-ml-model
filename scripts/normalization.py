@@ -12,8 +12,12 @@ def normalize_window(window):
 def normalize(numbers):
     normalized_values = []
 
-    for i in range(150, len(numbers)):
-        window = numbers[i - 150: i]
-        normalized_window_values = normalize_window(window)
-        normalized_values.append(normalized_window_values[-1])
+    for i in range(len(numbers)):
+        window = numbers[max(0, i-150): i]
+        try:
+            normalized_window_values = normalize_window(window)
+            normalized_values.append(normalized_window_values[-1])
+        except ValueError:
+            continue
+
     return normalized_values

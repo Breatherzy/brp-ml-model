@@ -1,19 +1,21 @@
 import re
-
+import csv
 from models.AbstractModel import SensorType
 
 
-def load_raw_data(filename: str) -> list[float]:
+def load_raw_data(filename: str) -> tuple[list[float], list[float]]:
     numbers = []
+    times = []
     # Geting data from file
     with open(filename) as file:
-        data = file.read().splitlines()
+        data = list(csv.reader(file))[1:]
         for data_line in data:
-            numbers.append(float(data_line))
-    return numbers
+            numbers.append(float(data_line[1]))
+            times.append(float(data_line[0]))
+    return times, numbers
 
 
-def load_tagged_data(filename: str) -> (list[float], list[float]):
+def load_tagged_data(filename: str) -> tuple[list[float], list[float]]:
     numbers = []
     tags = []
     # Geting data from file
