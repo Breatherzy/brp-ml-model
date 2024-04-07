@@ -26,11 +26,7 @@ class AbstractModel(metaclass=ABCMeta):
         self.is_model_fitted = False
 
     def load_data(
-            self,
-            filename,
-            expand_dims=False,
-            convert_to_categorical=False,
-            sensor_type=str
+        self, filename, expand_dims=False, convert_to_categorical=False, sensor_type=str
     ):
         """
         Method for loading data from a file and splitting it into training and testing data.
@@ -54,7 +50,7 @@ class AbstractModel(metaclass=ABCMeta):
             data = np.array(sequences)
 
         with open(
-                f"data/labelled/{sensor_type}_sequence/{sensor_type}_test.txt", "r"
+            f"data/labelled/{sensor_type}_sequence/{sensor_type}_test.txt", "r"
         ) as f:
             sequences = []
             for line in f.readlines():

@@ -26,7 +26,7 @@ class SequentialModel(AbstractModel, ABC, metaclass=ABCMeta):
             )
             history = history.history
             with open(
-                    f"models/saves/{sensor_type}/{self.__class__.__name__}.history", "a"
+                f"models/saves/{sensor_type}/{self.__class__.__name__}.history", "a"
             ) as file:
                 file.write(str(history) + "\n")
             self.is_model_fitted = True

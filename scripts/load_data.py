@@ -48,13 +48,13 @@ def save_data(filname, data):
 
 
 def save_sequences(
-        file_to_retrieve_sequences: str, file_to_save: str, size: int
+    file_to_retrieve_sequences: str, file_to_save: str, size: int
 ) -> None:
     with open(file_to_retrieve_sequences):
         data, tags = load_tagged_data(file_to_retrieve_sequences)
     sequences = []
     for i in range(size, len(data)):
-        sequence = data[i - size: i]
+        sequence = data[i - size : i]
         sequence.append(abs(max(sequence) - min(sequence)))
         sequences.append(sequence + [tags[i - size] + 1])
 
@@ -64,7 +64,7 @@ def save_sequences(
 
 
 def save_sequences_to_concatenated(
-        file_to_retrieve_sequences: str, file_to_save: str
+    file_to_retrieve_sequences: str, file_to_save: str
 ) -> None:
     with open(file_to_retrieve_sequences) as f:
         data = f.read().splitlines()
@@ -80,7 +80,6 @@ def empty_file(filename: str) -> None:
 
 
 def prepare_data_for_training(sensor: SensorType) -> None:
-
     input_size = sensor.value["size"] - 1
     sensor_type = sensor.value["name"]
     empty_file(f"data/labelled/{sensor_type}_sequence/{sensor_type}_concatenated.txt")

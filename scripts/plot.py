@@ -3,7 +3,7 @@ import numpy as np
 
 
 def interactive_plot(
-        features, labels_predicted, labels_actual, window_size=150, title="Interactive plot"
+    features, labels_predicted, labels_actual, window_size=150, title="Interactive plot"
 ):
     if len(labels_actual.shape) > 1 and labels_actual.shape[1] == 3:
         labels_actual = labels_actual.argmax(axis=1)
@@ -23,13 +23,13 @@ def interactive_plot(
 
         ax.scatter(
             range(start_index, start_index + window_size),
-            features[start_index: start_index + window_size],
-            color=colors[start_index: start_index + window_size],
+            features[start_index : start_index + window_size],
+            color=colors[start_index : start_index + window_size],
             picker=True,
         )
         ax.plot(
             range(start_index, start_index + window_size),
-            features[start_index: start_index + window_size],
+            features[start_index : start_index + window_size],
             linestyle="-",
             color="gray",
             alpha=0.5,
@@ -69,7 +69,9 @@ def plot_raw_data(sensor_type: str):
 
 
 def plot_tagged_data(sensor_type: str):
-    data = np.loadtxt(f"data/labelled/{sensor_type}_point/{sensor_type}_test.txt", delimiter=",")
+    data = np.loadtxt(
+        f"data/labelled/{sensor_type}_point/{sensor_type}_test.txt", delimiter=","
+    )
 
     features = data[:, :-1]
     labels = data[:, -1]

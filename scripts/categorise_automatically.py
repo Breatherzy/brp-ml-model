@@ -1,7 +1,6 @@
 import os
 
 import numpy as np
-from scipy.signal import savgol_filter
 
 from scripts.load_data import load_raw_data as load_data
 from scripts.normalization import normalize
@@ -57,14 +56,16 @@ def check_monotonicity_change(subarray):
 def find_monotonicity_changes(array, window_size=WINDOW_SIZE):
     results = []
     for i in range(window_size, len(array)):
-        subarray = array[i - window_size: i]
+        subarray = array[i - window_size : i]
         result = check_monotonicity_change(subarray)
         results.append(result)
 
     return results
 
 
-def save_tagged_data(data: list[float], monotonicity: list[float], time: list[float], filename: str) -> None:
+def save_tagged_data(
+    data: list[float], monotonicity: list[float], time: list[float], filename: str
+) -> None:
     if "tens" in filename:
         directory = "../data/pretrained/tens/"
     else:
@@ -74,9 +75,13 @@ def save_tagged_data(data: list[float], monotonicity: list[float], time: list[fl
             file.write(f"{data[i]},{monotonicity[i]},{time[i]}\n")
 
 
+def moving_average(data, window_size):
+    return np.convolve(data, np.ones(window_size) / window_size, mode="valid")
+
+
 current_directory = os.getcwd()
 desired_directory = (
-        os.path.dirname(os.path.dirname(current_directory)) + "/brp-ml-model/data/raw/tens/"
+    os.path.dirname(os.path.dirname(current_directory)) + "/brp-ml-model/data/raw/tens/"
 )
 for file in os.listdir(desired_directory):
     filename = os.fsdecode(file)
@@ -84,10 +89,9 @@ for file in os.listdir(desired_directory):
         times, numbers = load_data(desired_directory + filename)
 
         if desired_directory[-4:] == "acc/":
-            window_length = 50
-            poly_order = 10
-
-            numbers = savgol_filter(numbers, window_length, poly_order)
+            numbers = moving_average(numbers, 11)
+        else:
+            numbers = moving_average(numbers, 5)
         numbers = normalize(numbers)
 
         # if desired_directory[-4:] == "acc/":

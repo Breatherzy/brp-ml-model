@@ -9,8 +9,8 @@ from matplotlib.widgets import SpanSelector
 matplotlib.use("TkAgg")
 
 # Load data from txt file
-tens_file_path = "../data/pretrained/tens/tens_normal.txt"
-acc_file_path = "../data/pretrained/acc/acc_normal.txt"
+tens_file_path = "../data/pretrained/tens/tens_test.txt"
+acc_file_path = "../data/pretrained/acc/acc_test.txt"
 tens_data = np.loadtxt(tens_file_path, delimiter=",")
 acc_data = np.loadtxt(acc_file_path, delimiter=",")
 
@@ -25,19 +25,24 @@ current_start_index_acc = 0
 span_selector_active_tens = False
 span_selector_active_acc = False
 
+
 def get_data_according_to_time(data, time_start, time_stop):
     return data[(data[:, 2] >= time_start) & (data[:, 2] < time_stop)]
+
 
 def get_data_indexes_according_to_time(data, time_start, time_stop):
     start_index = np.where(data[:, 2] >= time_start)[0][0]
     end_index = np.where(data[:, 2] <= time_stop)[0][-1]
     return start_index, end_index
 
+
 # Interactive plotting
 def plot_data(ax, data, current_start_index, title):
     ax.cla()  # Clear current axes
     end_index = current_start_index + SECONDS_TIME
-    gather_time_relevant_data = get_data_according_to_time(data, current_start_index, end_index)
+    gather_time_relevant_data = get_data_according_to_time(
+        data, current_start_index, end_index
+    )
     colors = [COLOR_MAP[label] for label in gather_time_relevant_data[:, 1]]
     scatter = ax.scatter(
         gather_time_relevant_data[:, 2],
@@ -61,7 +66,10 @@ def plot_data(ax, data, current_start_index, title):
 
 
 def onpick(event, data, current_start_index, file_path):
-    if not (span_selector_active_tens or span_selector_active_acc) and event.artist.get_label() == "_child0":
+    if (
+        not (span_selector_active_tens or span_selector_active_acc)
+        and event.artist.get_label() == "_child0"
+    ):
         point_index = int(event.ind[0] + current_start_index)
         current_color = int(data[point_index, 1])
         new_color = choose_color(current_color)
@@ -149,14 +157,27 @@ def on_key(event, data, current_start_index, ax):
     plot_data(ax2, acc_data, current_start_index_acc, "Acc Plot")
 
 
-def on_span_select(xmin, xmax, data_tens, data_acc, current_start_index, ax, tens_file_path, acc_file_path):
+def on_span_select(
+    xmin,
+    xmax,
+    data_tens,
+    data_acc,
+    current_start_index,
+    ax,
+    tens_file_path,
+    acc_file_path,
+):
     start_index = max(xmin, 0)
     end_index = min(xmax, max(data_tens[:, 2]))
-    data_start, data_end = get_data_indexes_according_to_time(data_tens, start_index, end_index)
+    data_start, data_end = get_data_indexes_according_to_time(
+        data_tens, start_index, end_index
+    )
     new_color = choose_color(int(data_tens[data_start, 1]))
     update_point_color(data_start, data_end, new_color, data_tens, tens_file_path)
 
-    data_start, data_end = get_data_indexes_according_to_time(data_acc, start_index, end_index)
+    data_start, data_end = get_data_indexes_according_to_time(
+        data_acc, start_index, end_index
+    )
     update_point_color(data_start, data_end, new_color, data_acc, acc_file_path)
 
 
@@ -168,19 +189,59 @@ def tk_process(q):
 # Create initial plot
 fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 12))
 # Connect the pick event to the function
-fig.canvas.mpl_connect("pick_event", lambda event: onpick(event, tens_data, current_start_index_tens, tens_file_path))
-fig.canvas.mpl_connect("key_press_event", lambda event: on_key(event, tens_data, current_start_index_tens, ax1))
-fig.canvas.mpl_connect("pick_event", lambda event: onpick(event, acc_data, current_start_index_acc, acc_file_path))
-fig.canvas.mpl_connect("key_press_event", lambda event: on_key(event, acc_data, current_start_index_acc, ax2))
+fig.canvas.mpl_connect(
+    "pick_event",
+    lambda event: onpick(event, tens_data, current_start_index_tens, tens_file_path),
+)
+fig.canvas.mpl_connect(
+    "key_press_event",
+    lambda event: on_key(event, tens_data, current_start_index_tens, ax1),
+)
+fig.canvas.mpl_connect(
+    "pick_event",
+    lambda event: onpick(event, acc_data, current_start_index_acc, acc_file_path),
+)
+fig.canvas.mpl_connect(
+    "key_press_event",
+    lambda event: on_key(event, acc_data, current_start_index_acc, ax2),
+)
 
 plot_data(ax1, tens_data, current_start_index_tens, "Tens Plot")
 plot_data(ax2, acc_data, current_start_index_acc, "Acc Plot")
 # Create a SpanSelector for tens plot
-span_selector_tens = SpanSelector(ax1, lambda xmin, xmax: on_span_select(xmin, xmax, tens_data, acc_data, current_start_index_tens, ax1, tens_file_path, acc_file_path), "horizontal", useblit=True)
+span_selector_tens = SpanSelector(
+    ax1,
+    lambda xmin, xmax: on_span_select(
+        xmin,
+        xmax,
+        tens_data,
+        acc_data,
+        current_start_index_tens,
+        ax1,
+        tens_file_path,
+        acc_file_path,
+    ),
+    "horizontal",
+    useblit=True,
+)
 span_selector_tens.set_active(False)
 
 # Create a SpanSelector for acc plot
-span_selector_acc = SpanSelector(ax2, lambda xmin, xmax: on_span_select(xmin, xmax, tens_data, acc_data, current_start_index_acc, ax2, tens_file_path, acc_file_path), "horizontal", useblit=True)
+span_selector_acc = SpanSelector(
+    ax2,
+    lambda xmin, xmax: on_span_select(
+        xmin,
+        xmax,
+        tens_data,
+        acc_data,
+        current_start_index_acc,
+        ax2,
+        tens_file_path,
+        acc_file_path,
+    ),
+    "horizontal",
+    useblit=True,
+)
 span_selector_acc.set_active(False)
 
 # Ensure that the script runs in the main block when using multiprocessing
