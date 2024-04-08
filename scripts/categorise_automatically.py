@@ -81,7 +81,7 @@ def moving_average(data, window_size):
 
 current_directory = os.getcwd()
 desired_directory = (
-    os.path.dirname(os.path.dirname(current_directory)) + "/brp-ml-model/data/raw/tens/"
+    os.path.dirname(os.path.dirname(current_directory)) + "/brp-ml-model/data/raw/acc/"
 )
 for file in os.listdir(desired_directory):
     filename = os.fsdecode(file)
@@ -90,13 +90,17 @@ for file in os.listdir(desired_directory):
 
         if desired_directory[-4:] == "acc/":
             numbers = moving_average(numbers, 11)
+            numbers = normalize(numbers, 375)
+
         else:
             numbers = moving_average(numbers, 5)
-        numbers = normalize(numbers)
+            numbers = normalize(numbers, 150)
 
-        # if desired_directory[-4:] == "acc/":
+
+        if desired_directory[-4:] == "acc/":
+            numbers = [-x for x in numbers]
         #     # Rotate numbers within the range of -1 to 1
-        #     numbers = [-x for x in numbers]
+
         mono_tags = monotonicity(numbers, data_size=WINDOW_SIZE)
 
         save_tagged_data(numbers, mono_tags, times, filename[:-4] + ".txt")

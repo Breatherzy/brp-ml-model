@@ -9,11 +9,11 @@ def normalize_window(window):
     return normalized
 
 
-def normalize(numbers):
+def normalize(numbers, normalization_range):
     normalized_values = []
 
     for i in range(len(numbers)):
-        window = numbers[max(0, i - 150) : i]
+        window = numbers[max(0, i - normalization_range) : i]
         try:
             normalized_window_values = normalize_window(window)
             normalized_values.append(normalized_window_values[-1])

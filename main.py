@@ -32,7 +32,7 @@ def evaluate_epochs():
     history = []
 
     for i in range(10, 101, 10):
-        _model = LSTMModel()
+        _model = GRUModel()
         _model.load_data(
             filename=f"data/labelled/{SENSOR_NAME}_sequence/{SENSOR_NAME}_concatenated.txt",
             sensor_type=f"{SENSOR_NAME}",

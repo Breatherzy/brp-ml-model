@@ -12,12 +12,12 @@ def interactive_plot(
     def plot(ax, start_index=0, predicted=True):
         ax.clear()
         colors = [
-            "red" if m == 0 else "blue" if m == 2 else "green" if m == 1 else "gray"
+            "red" if m == 0 else "green" if m == 1 else "blue" if m == 2 else "yellow" if m == 3 else "gray"
             for m in labels_predicted
         ]
         if not predicted:
             colors = [
-                "red" if m == 0 else "blue" if m == 2 else "green" if m == 1 else "gray"
+                "red" if m == 0 else "green" if m == 1 else "blue" if m == 2 else "yellow" if m == 3 else "gray"
                 for m in labels_actual
             ]
 

@@ -20,7 +20,7 @@ class GRUModel(SequentialModel):
                         input_shape=(self.X_train.shape[1], self.X_train.shape[2]),
                     ),
                     Dense(50, activation="tanh"),
-                    Dense(3, activation="softmax"),
+                    Dense(4, activation="softmax"),
                 ]
             )
             self.model.compile(
