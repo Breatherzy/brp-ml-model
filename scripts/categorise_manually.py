@@ -50,13 +50,13 @@ def on_key(event):
 def onselect(xmin, xmax):
     range_ = int(xmax) - int(xmin)
     if (
-            range_ >= SELECTION_SIZE
+        range_ >= SELECTION_SIZE
     ):  # If more than 10 points are selected, just pick the first 10
         selected_points = number_strings[
-                          int(xmin)
-                          + current_start_index: int(xmin + SELECTION_SIZE)
-                                                 + current_start_index
-                          ]
+            int(xmin)
+            + current_start_index : int(xmin + SELECTION_SIZE)
+            + current_start_index
+        ]
         with open("data_output/" + files[0], "a") as file:
             file.write(f'{" ".join(selected_points)}\n')
 

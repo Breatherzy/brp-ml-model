@@ -1,7 +1,6 @@
 import os
 
 import numpy as np
-from scipy.signal import savgol_filter
 
 from scripts.load_data import load_raw_data as load_data
 from scripts.normalization import normalize
@@ -57,34 +56,50 @@ def check_monotonicity_change(subarray):
 def find_monotonicity_changes(array, window_size=WINDOW_SIZE):
     results = []
     for i in range(window_size, len(array)):
-        subarray = array[i - window_size: i]
+        subarray = array[i - window_size : i]
         result = check_monotonicity_change(subarray)
         results.append(result)
 
     return results
 
 
-def save_tagged_data(data, monotonicity, filename):
-    with open("../data/labelled/acc_point/" + filename, "w") as file:
+def save_tagged_data(
+    data: list[float], monotonicity: list[float], time: list[float], filename: str
+) -> None:
+    if "tens" in filename:
+        directory = "../data/pretrained/tens/"
+    else:
+        directory = "../data/pretrained/acc/"
+    with open(directory + filename, "w") as file:
         for i in range(len(data)):
-            file.write(f"{data[i]},{monotonicity[i]}\n")
+            file.write(f"{data[i]},{monotonicity[i]},{time[i]}\n")
+
+
+def moving_average(data, window_size):
+    return np.convolve(data, np.ones(window_size) / window_size, mode="valid")
 
 
 current_directory = os.getcwd()
 desired_directory = (
-        os.path.dirname(os.path.dirname(current_directory)) + "/brp-ml-model/data/raw/acc/"
+    os.path.dirname(os.path.dirname(current_directory)) + "/brp-ml-model/data/raw/acc/"
 )
 for file in os.listdir(desired_directory):
     filename = os.fsdecode(file)
-    if filename.endswith(".txt"):
-        numbers = load_data(desired_directory + filename)
+    if filename.endswith(".csv"):
+        times, numbers = load_data(desired_directory + filename)
 
-        window_length = 50
-        poly_order = 10
+        if desired_directory[-4:] == "acc/":
+            numbers = moving_average(numbers, 11)
+            numbers = normalize(numbers, 375)
 
-        filtered_data = savgol_filter(numbers, window_length, poly_order)
-        numbers = normalize(filtered_data)
-        number_strings = [str(str_number) for str_number in numbers]
+        else:
+            numbers = moving_average(numbers, 5)
+            numbers = normalize(numbers, 150)
+
+        if desired_directory[-4:] == "acc/":
+            numbers = [-x for x in numbers]
+        #     # Rotate numbers within the range of -1 to 1
+
         mono_tags = monotonicity(numbers, data_size=WINDOW_SIZE)
 
-        save_tagged_data(numbers, mono_tags, filename[:-4] + ".txt")
+        save_tagged_data(numbers, mono_tags, times, filename[:-4] + ".txt")

@@ -22,7 +22,7 @@ class Conv1DModel(SequentialModel):
                     ),
                     Flatten(),
                     Dense(50, activation="relu"),
-                    Dense(3, activation="softmax"),
+                    Dense(4, activation="softmax"),
                 ]
             )
             self.model.compile(

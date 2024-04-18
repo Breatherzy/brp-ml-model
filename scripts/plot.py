@@ -1,9 +1,10 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import ast
 
 
 def interactive_plot(
-        features, labels_predicted, labels_actual, window_size=150, title="Interactive plot"
+    features, labels_predicted, labels_actual, window_size=150, title="Interactive plot"
 ):
     if len(labels_actual.shape) > 1 and labels_actual.shape[1] == 3:
         labels_actual = labels_actual.argmax(axis=1)
@@ -12,24 +13,40 @@ def interactive_plot(
     def plot(ax, start_index=0, predicted=True):
         ax.clear()
         colors = [
-            "red" if m == 0 else "blue" if m == 2 else "green" if m == 1 else "gray"
+            "red"
+            if m == 0
+            else "green"
+            if m == 1
+            else "blue"
+            if m == 2
+            else "yellow"
+            if m == 3
+            else "gray"
             for m in labels_predicted
         ]
         if not predicted:
             colors = [
-                "red" if m == 0 else "blue" if m == 2 else "green" if m == 1 else "gray"
+                "red"
+                if m == 0
+                else "green"
+                if m == 1
+                else "blue"
+                if m == 2
+                else "yellow"
+                if m == 3
+                else "gray"
                 for m in labels_actual
             ]
 
         ax.scatter(
             range(start_index, start_index + window_size),
-            features[start_index: start_index + window_size],
-            color=colors[start_index: start_index + window_size],
+            features[start_index : start_index + window_size],
+            color=colors[start_index : start_index + window_size],
             picker=True,
         )
         ax.plot(
             range(start_index, start_index + window_size),
-            features[start_index: start_index + window_size],
+            features[start_index : start_index + window_size],
             linestyle="-",
             color="gray",
             alpha=0.5,
@@ -69,7 +86,9 @@ def plot_raw_data(sensor_type: str):
 
 
 def plot_tagged_data(sensor_type: str):
-    data = np.loadtxt(f"data/labelled/{sensor_type}_point/{sensor_type}_test.txt", delimiter=",")
+    data = np.loadtxt(
+        f"data/labelled/{sensor_type}_point/{sensor_type}_test.txt", delimiter=","
+    )
 
     features = data[:, :-1]
     labels = data[:, -1]
@@ -79,7 +98,9 @@ def plot_tagged_data(sensor_type: str):
 
 def plot_history(filename: str):
     with open(filename, "r") as file:
-        history = eval(file.read())
+        history = file.read()
+
+    history = ast.literal_eval(history)
 
     plt.plot(history["accuracy"], label="accuracy")
     plt.plot(history["val_accuracy"], label="val_accuracy")

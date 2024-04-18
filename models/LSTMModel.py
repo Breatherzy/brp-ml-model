@@ -20,7 +20,7 @@ class LSTMModel(SequentialModel):
                         input_shape=(self.X_train.shape[1], self.X_train.shape[2]),
                     ),
                     Dense(10, activation="relu"),
-                    Dense(3, activation="softmax"),
+                    Dense(4, activation="softmax"),
                 ]
             )
             self.model.compile(
