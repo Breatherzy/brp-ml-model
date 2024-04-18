@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import ast
 
+
 def interactive_plot(
     features, labels_predicted, labels_actual, window_size=150, title="Interactive plot"
 ):
@@ -12,12 +13,28 @@ def interactive_plot(
     def plot(ax, start_index=0, predicted=True):
         ax.clear()
         colors = [
-            "red" if m == 0 else "green" if m == 1 else "blue" if m == 2 else "yellow" if m == 3 else "gray"
+            "red"
+            if m == 0
+            else "green"
+            if m == 1
+            else "blue"
+            if m == 2
+            else "yellow"
+            if m == 3
+            else "gray"
             for m in labels_predicted
         ]
         if not predicted:
             colors = [
-                "red" if m == 0 else "green" if m == 1 else "blue" if m == 2 else "yellow" if m == 3 else "gray"
+                "red"
+                if m == 0
+                else "green"
+                if m == 1
+                else "blue"
+                if m == 2
+                else "yellow"
+                if m == 3
+                else "gray"
                 for m in labels_actual
             ]
 
@@ -84,7 +101,6 @@ def plot_history(filename: str):
         history = file.read()
 
     history = ast.literal_eval(history)
-
 
     plt.plot(history["accuracy"], label="accuracy")
     plt.plot(history["val_accuracy"], label="val_accuracy")

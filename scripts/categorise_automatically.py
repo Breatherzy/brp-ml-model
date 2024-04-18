@@ -96,7 +96,6 @@ for file in os.listdir(desired_directory):
             numbers = moving_average(numbers, 5)
             numbers = normalize(numbers, 150)
 
-
         if desired_directory[-4:] == "acc/":
             numbers = [-x for x in numbers]
         #     # Rotate numbers within the range of -1 to 1

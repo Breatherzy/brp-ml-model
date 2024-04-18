@@ -99,7 +99,12 @@ def choose_color(initial_color):
 
     frame = Frame(root)
     frame.pack(padx=10, pady=10)
-    BREATH_STATE = {-1.0: "BREATH OUT", 0.0: "OUT NO BREATH", 1.0: "BREATH IN", 2.0: "IN NO BREATH"}
+    BREATH_STATE = {
+        -1.0: "BREATH OUT",
+        0.0: "OUT NO BREATH",
+        1.0: "BREATH IN",
+        2.0: "IN NO BREATH",
+    }
     for label, color in {-1.0: "red", 0.0: "green", 1.0: "blue", 2.0: "orange"}.items():
         button_label = BREATH_STATE[label]
         button = Button(
