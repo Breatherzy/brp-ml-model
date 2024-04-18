@@ -19,8 +19,7 @@ class BNModel(SequentialModel):
                     BatchNormalization(),
                     Dense(64, activation="relu"),
                     BatchNormalization(),
-                    # Wyjście dla 3 klas
-                    Dense(3, activation="softmax"),
+                    Dense(4, activation="softmax"),
                 ]
             )
             self.model.compile(

@@ -58,8 +58,8 @@ def plot_data(ax, data, current_start_index, title):
         alpha=0.5,
     )
     ax.set_title(title)
-    ax.set_xlabel("X Value")
-    ax.set_ylabel("Y Value")
+    ax.set_xlabel("Time [seconds]")
+    ax.set_ylabel("Normalized Value")
     ax.grid(True)
     fig.canvas.draw()
     scatter.set_picker(True)

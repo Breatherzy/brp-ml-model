@@ -50,7 +50,7 @@ class AbstractModel(metaclass=ABCMeta):
             data = np.array(sequences)
 
         with open(
-            f"data/labelled/{sensor_type}_sequence/{sensor_type}_test.txt", "r"
+            f"data/pretrained/{sensor_type}_sequence/{sensor_type}_test.txt", "r"
         ) as f:
             sequences = []
             for line in f.readlines():

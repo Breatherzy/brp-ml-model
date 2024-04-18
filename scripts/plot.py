@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
-
+import ast
 
 def interactive_plot(
     features, labels_predicted, labels_actual, window_size=150, title="Interactive plot"
@@ -81,7 +81,10 @@ def plot_tagged_data(sensor_type: str):
 
 def plot_history(filename: str):
     with open(filename, "r") as file:
-        history = eval(file.read())
+        history = file.read()
+
+    history = ast.literal_eval(history)
+
 
     plt.plot(history["accuracy"], label="accuracy")
     plt.plot(history["val_accuracy"], label="val_accuracy")
