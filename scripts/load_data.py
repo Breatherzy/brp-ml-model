@@ -1,6 +1,7 @@
-import re
 import csv
-from models.AbstractModel import SensorType
+import re
+from os import mkdir
+from os.path import exists
 
 
 def load_raw_data(filename: str) -> tuple[list[float], list[float]]:
@@ -48,13 +49,13 @@ def save_data(filname, data):
 
 
 def save_sequences(
-    file_to_retrieve_sequences: str, file_to_save: str, size: int
+        file_to_retrieve_sequences: str, file_to_save: str, size: int
 ) -> None:
     with open(file_to_retrieve_sequences):
         data, tags = load_tagged_data(file_to_retrieve_sequences)
     sequences = []
     for i in range(size, len(data)):
-        sequence = data[i - size : i]
+        sequence = data[i - size: i]
         sequence.append(abs(max(sequence) - min(sequence)))
         sequences.append(sequence + [tags[i - size] + 1])
 
@@ -64,7 +65,7 @@ def save_sequences(
 
 
 def save_sequences_to_concatenated(
-    file_to_retrieve_sequences: str, file_to_save: str
+        file_to_retrieve_sequences: str, file_to_save: str
 ) -> None:
     with open(file_to_retrieve_sequences) as f:
         data = f.read().splitlines()
@@ -75,14 +76,18 @@ def save_sequences_to_concatenated(
 
 
 def empty_file(filename: str) -> None:
+    folder = filename.split("/")[2]
+    if not exists(f"data/pretrained/{folder}"):
+        mkdir(f"data/pretrained/{folder}")
+
     with open(filename, "w") as file:
         pass
 
 
-def prepare_data_for_training(sensor: SensorType) -> None:
+def prepare_data_for_training(sensor) -> None:
     input_size = sensor.value["size"] - 1
     sensor_type = sensor.value["name"]
-    empty_file(f"data/pretrained/{sensor_type}/{sensor_type}_concatenated.txt")
+    empty_file(f"data/pretrained/{sensor_type}_sequence/{sensor_type}_concatenated.txt")
     for data in [
         "_cough.txt",
         "_exhale_pause.txt",

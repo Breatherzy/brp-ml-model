@@ -59,5 +59,5 @@ class SequentialModel(AbstractModel, ABC, metaclass=ABCMeta):
             f.write(tflite_model)
 
     def load(self, filename):
-        self.model = load_model(filename)
+        self.model = load_model(filename + ".keras")
         self.is_model_loaded = True
