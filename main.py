@@ -8,7 +8,7 @@ from scripts.plot import plot_history, plot_evaluation_history, plot_test_data
 #  plot so it can be used in this test using predicted
 #  data from model and X_test, y_test fields
 
-SENSOR = SensorType.TENSOMETER
+SENSOR = SensorType.ACCELEROMETER
 SENSOR_NAME = SENSOR.value["name"]
 
 
@@ -42,8 +42,10 @@ if __name__ == "__main__":
     model.fit(sensor_type=f"{SENSOR_NAME}", epochs=50)
 
     # model.load(f"models/saves/{SENSOR_NAME}/GRUModel_{SENSOR_NAME}")
-    model.plot_prediction(model.X_test, name=f"{SENSOR_NAME}_concatenated")
     model.save(f"models/saves/{SENSOR_NAME}/GRUModel_{SENSOR_NAME}")
+    model.confusion_matrix(model.X_test, model.y_test,
+                           name=f"{SENSOR_NAME}_test")
+    model.plot_prediction(model.X_test, name=f"{SENSOR_NAME}_test")
     plot_history(f"models/saves/{SENSOR_NAME}/GRUModel.history")
 
     # plot_test_data(SENSOR_NAME)
