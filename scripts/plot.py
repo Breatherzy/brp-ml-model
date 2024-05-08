@@ -57,7 +57,8 @@ def interactive_plot(
         )
         ax.set_xlim(start_index, start_index + window_size)
         ax.set_xlabel("" if predicted else 'Indeks próbki')
-        ax.set_ylabel(f"Etykiety {'przewidywane' if predicted else 'wzorcowe'}")
+        ax.set_ylabel(
+            f"Etykiety {'przewidywane' if predicted else 'wzorcowe'}")
 
     def on_key(event):
         nonlocal current_index
@@ -83,7 +84,8 @@ def interactive_plot(
 
 
 def plot_raw_data(sensor_type: str):
-    seconds, numbers = load_raw_data(f"data/raw/{sensor_type}/{sensor_type}_test.csv")
+    seconds, numbers = load_raw_data(
+        f"data/raw/{sensor_type}/{sensor_type}_test.csv")
 
     features = numbers
     labels = np.zeros(len(numbers))
@@ -91,27 +93,39 @@ def plot_raw_data(sensor_type: str):
     interactive_plot(features, labels, labels)
 
 
-def plot_test_data(sensor_type: str):
-    seconds, numbers = load_raw_data(f"data/raw/{sensor_type}/{sensor_type}_test.csv")
+def plot_test_data(sensor_type: str, normalize_data=False):
+    seconds, numbers = load_raw_data(
+        f"data/raw/{sensor_type}/{sensor_type}_test.csv")
 
     plt.figure(figsize=(20, 10))
 
-    # numbers = moving_average(numbers, 11)
+    data = {
+        "acc": {
+            "window": 11,
+            "norm": 375,
+        },
+        "tens": {
+            "window": 5,
+            "norm": 150,
+        }
+    }
 
-    # numbers = normalize(numbers, 375)
-
-    # seconds = seconds[: len(numbers)]
+    if normalize_data:
+        numbers = moving_average(numbers, data[sensor_type]["window"])
+        numbers = normalize(numbers, data[sensor_type]["norm"])
+        seconds = seconds[: len(numbers)]
 
     plt.plot(seconds, numbers)
     fontsize = 15
     plt.xlabel("Czas [s]", fontsize=fontsize)
 
-    # plt.ticklabel_format(axis="y", style="sci", scilimits=(0, 0))
+    if sensor_type == "tens" and not normalize_data:
+        plt.ticklabel_format(axis="y", style="sci", scilimits=(0, 0))
 
-    plt.ylabel("Surowa wartość z akcelerometru", fontsize=fontsize)
-    plt.title(f"Surowe dane z akcelerometru", fontsize=fontsize)
+    plt.ylabel(f"{'Znormalizowana' if normalize_data else 'Surowa'} wartość z {'akcelerometru' if sensor_type == 'acc' else 'tensometru'}", fontsize=fontsize)
+    plt.title(f"{'Znormalizowane' if normalize_data else 'Surowe'} dane z {'akcelerometru' if sensor_type == 'acc' else 'tensometru'}", fontsize=fontsize)
 
-    avg = 0.6
+    avg = 0
 
     plt.axvline(x=0, color="red", linestyle="--")
     plt.text(0, avg, "norm", rotation=90, fontsize=fontsize)
@@ -136,7 +150,7 @@ def plot_test_data(sensor_type: str):
     plt.xticks(fontsize=fontsize)
     plt.yticks(fontsize=fontsize)
 
-    plt.savefig(f"graphs/raw_data_{sensor_type}.png")
+    plt.savefig(f"graphs/{'norm_' if normalize_data else 'raw_'}data_{sensor_type}.png")
 
     plt.show()
 

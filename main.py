@@ -8,7 +8,7 @@ from scripts.plot import plot_history, plot_evaluation_history, plot_test_data
 #  plot so it can be used in this test using predicted
 #  data from model and X_test, y_test fields
 
-SENSOR = SensorType.ACCELEROMETER
+SENSOR = SensorType.TENSOMETER
 SENSOR_NAME = SENSOR.value["name"]
 
 
@@ -32,20 +32,20 @@ def evaluate_epochs():
 
 
 if __name__ == "__main__":
-    prepare_data_for_training(sensor=SENSOR)
-    model = GRUModel()
-    model.load_data(
-        filename=f"data/pretrained/{SENSOR_NAME}_sequence/{SENSOR_NAME}_concatenated.txt",
-        sensor_type=f"{SENSOR_NAME}",
-    )
-    model.compile()
-    model.fit(sensor_type=f"{SENSOR_NAME}", epochs=50)
+    # prepare_data_for_training(sensor=SENSOR)
+    # model = GRUModel()
+    # model.load_data(
+    #     filename=f"data/pretrained/{SENSOR_NAME}_sequence/{SENSOR_NAME}_concatenated.txt",
+    #     sensor_type=f"{SENSOR_NAME}",
+    # )
+    # model.compile()
+    # model.fit(sensor_type=f"{SENSOR_NAME}", epochs=50)
 
-    # model.load(f"models/saves/{SENSOR_NAME}/GRUModel_{SENSOR_NAME}")
-    model.save(f"models/saves/{SENSOR_NAME}/GRUModel_{SENSOR_NAME}")
-    model.confusion_matrix(model.X_test, model.y_test,
-                           name=f"{SENSOR_NAME}_test")
-    model.plot_prediction(model.X_test, name=f"{SENSOR_NAME}_test")
-    plot_history(f"models/saves/{SENSOR_NAME}/GRUModel.history")
+    # # model.load(f"models/saves/{SENSOR_NAME}/GRUModel_{SENSOR_NAME}")
+    # model.save(f"models/saves/{SENSOR_NAME}/GRUModel_{SENSOR_NAME}")
+    # model.confusion_matrix(model.X_test, model.y_test,
+    #                        name=f"{SENSOR_NAME}_test")
+    # model.plot_prediction(model.X_test, name=f"{SENSOR_NAME}_test")
+    # plot_history(f"models/saves/{SENSOR_NAME}/GRUModel.history")
 
-    # plot_test_data(SENSOR_NAME)
+    plot_test_data(SENSOR_NAME, normalize_data=True)
