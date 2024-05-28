@@ -3,7 +3,7 @@ import os
 import numpy as np
 
 from scripts.load_data import load_raw_data as load_data
-from scripts.normalization import normalize
+from scripts.normalization import moving_average, normalize
 
 # Load and normalize data
 np.random.seed(42)
@@ -75,10 +75,6 @@ def save_tagged_data(
             file.write(f"{data[i]},{monotonicity[i]},{time[i]}\n")
 
 
-def moving_average(data, window_size):
-    return np.convolve(data, np.ones(window_size) / window_size, mode="valid")
-
-
 current_directory = os.getcwd()
 desired_directory = (
     os.path.dirname(os.path.dirname(current_directory)) + "/brp-ml-model/data/raw/acc/"
@@ -98,7 +94,7 @@ for file in os.listdir(desired_directory):
 
         if desired_directory[-4:] == "acc/":
             numbers = [-x for x in numbers]
-        #     # Rotate numbers within the range of -1 to 1
+        # Rotate numbers within the range of -1 to 1
 
         mono_tags = monotonicity(numbers, data_size=WINDOW_SIZE)
 

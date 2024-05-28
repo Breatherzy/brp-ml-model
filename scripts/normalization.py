@@ -1,3 +1,6 @@
+import numpy as np
+
+
 def normalize_window(window):
     min_val = min(window)
     max_val = max(window)
@@ -21,3 +24,7 @@ def normalize(numbers, normalization_range):
             continue
 
     return normalized_values
+
+
+def moving_average(data, window_size):
+    return np.convolve(data, np.ones(window_size) / window_size, mode="valid")

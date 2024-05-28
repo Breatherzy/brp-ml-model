@@ -1,8 +1,10 @@
 from abc import ABCMeta, abstractmethod
 from enum import Enum
 
+import matplotlib.pyplot as plt
 import numpy as np
 from keras.src.utils import to_categorical
+from sklearn.metrics import confusion_matrix
 
 from scripts.plot import interactive_plot
 
@@ -96,7 +98,63 @@ class AbstractModel(metaclass=ABCMeta):
         """
         raise NotImplementedError("The predict() method is not implemented")
 
+    def confusion_matrix(
+        self, X_test: np.ndarray, y_test: np.ndarray, name=None
+    ) -> np.ndarray:
+        """
+        Method for calculating and presenting the confusion matrix.
+        """
+        conf_matrix = confusion_matrix(y_test, self.predict(X_test))
+        print(conf_matrix)
+        print(y_test)
+
+        fig, ax = plt.subplots(figsize=(8, 7))
+        im = ax.imshow(conf_matrix, cmap=plt.cm.Blues)
+        text_colors = ["black", "white"]
+        thresh = conf_matrix.max() / 2.0
+
+        for i in range(conf_matrix.shape[0]):
+            for j in range(conf_matrix.shape[1]):
+                # Wybór koloru tekstu
+                text_color = text_colors[int(conf_matrix[i, j] > thresh)]
+                ax.text(
+                    x=j,
+                    y=i,
+                    s=conf_matrix[i, j],
+                    va="center",
+                    ha="center",
+                    color=text_color,
+                )
+
+        ax.figure.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
+
+        class_labels = {
+            0: "Wydech",
+            1: "Bezdech\npo wydechu",
+            2: "Wdech",
+            3: "Bezdech\npo wdechu",
+        }
+
+        ax.set_xticklabels(class_labels[i] for i in range(conf_matrix.shape[1]))
+        ax.set_yticklabels(class_labels[i] for i in range(conf_matrix.shape[0]))
+        plt.setp(ax.get_xticklabels(), fontsize=8)
+        plt.setp(ax.get_yticklabels(), fontsize=8)
+
+        ax.set(
+            xticks=np.arange(conf_matrix.shape[1]),
+            yticks=np.arange(conf_matrix.shape[0]),
+            ylabel="Właściwa klasa",
+            xlabel="Predykcja",
+        )
+        plt.title("Macierz konfuzji: " + self.__class__.__name__ + " - " + name)
+        plt.show()
+
+        return conf_matrix
+
     def plot_prediction(self, X_test, name=None) -> None:
+        """
+        Method for plotting the prediction.
+        """
         title = f"{self.__class__.__name__} - {name} - {self.evaluate() * 100:.2f}%"
         if X_test.shape[1] == 1:
             interactive_plot(

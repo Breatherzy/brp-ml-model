@@ -1,4 +1,5 @@
 import os
+
 import pandas as pd
 
 folder_path = "../data/raw/"

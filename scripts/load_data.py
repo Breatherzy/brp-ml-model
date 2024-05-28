@@ -1,6 +1,7 @@
-import re
 import csv
-from models.AbstractModel import SensorType
+import re
+from os import mkdir
+from os.path import exists
 
 
 def load_raw_data(filename: str) -> tuple[list[float], list[float]]:
@@ -75,14 +76,18 @@ def save_sequences_to_concatenated(
 
 
 def empty_file(filename: str) -> None:
+    folder = filename.split("/")[2]
+    if not exists(f"data/pretrained/{folder}"):
+        mkdir(f"data/pretrained/{folder}")
+
     with open(filename, "w") as file:
         pass
 
 
-def prepare_data_for_training(sensor: SensorType) -> None:
+def prepare_data_for_training(sensor) -> None:
     input_size = sensor.value["size"] - 1
     sensor_type = sensor.value["name"]
-    empty_file(f"data/pretrained/{sensor_type}/{sensor_type}_concatenated.txt")
+    empty_file(f"data/pretrained/{sensor_type}_sequence/{sensor_type}_concatenated.txt")
     for data in [
         "_cough.txt",
         "_exhale_pause.txt",
