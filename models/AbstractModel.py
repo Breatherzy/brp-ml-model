@@ -1,10 +1,10 @@
 from abc import ABCMeta, abstractmethod
 from enum import Enum
 
+import matplotlib.pyplot as plt
 import numpy as np
 from keras.src.utils import to_categorical
 from sklearn.metrics import confusion_matrix
-import matplotlib.pyplot as plt
 
 from scripts.plot import interactive_plot
 
@@ -98,7 +98,9 @@ class AbstractModel(metaclass=ABCMeta):
         """
         raise NotImplementedError("The predict() method is not implemented")
 
-    def confusion_matrix(self, X_test: np.ndarray, y_test: np.ndarray, name=None) -> np.ndarray:
+    def confusion_matrix(
+        self, X_test: np.ndarray, y_test: np.ndarray, name=None
+    ) -> np.ndarray:
         """
         Method for calculating and presenting the confusion matrix.
         """
@@ -109,14 +111,20 @@ class AbstractModel(metaclass=ABCMeta):
         fig, ax = plt.subplots(figsize=(8, 7))
         im = ax.imshow(conf_matrix, cmap=plt.cm.Blues)
         text_colors = ["black", "white"]
-        thresh = conf_matrix.max() / 2.
+        thresh = conf_matrix.max() / 2.0
 
         for i in range(conf_matrix.shape[0]):
             for j in range(conf_matrix.shape[1]):
                 # Wybór koloru tekstu
                 text_color = text_colors[int(conf_matrix[i, j] > thresh)]
                 ax.text(
-                    x=j, y=i, s=conf_matrix[i, j], va='center', ha='center', color=text_color)
+                    x=j,
+                    y=i,
+                    s=conf_matrix[i, j],
+                    va="center",
+                    ha="center",
+                    color=text_color,
+                )
 
         ax.figure.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
 
@@ -127,19 +135,18 @@ class AbstractModel(metaclass=ABCMeta):
             3: "Bezdech\npo wdechu",
         }
 
-        ax.set_xticklabels(class_labels[i]
-                           for i in range(conf_matrix.shape[1]))
-        ax.set_yticklabels(class_labels[i]
-                           for i in range(conf_matrix.shape[0]))
+        ax.set_xticklabels(class_labels[i] for i in range(conf_matrix.shape[1]))
+        ax.set_yticklabels(class_labels[i] for i in range(conf_matrix.shape[0]))
         plt.setp(ax.get_xticklabels(), fontsize=8)
         plt.setp(ax.get_yticklabels(), fontsize=8)
 
-        ax.set(xticks=np.arange(conf_matrix.shape[1]),
-               yticks=np.arange(conf_matrix.shape[0]),
-               ylabel='Właściwa klasa',
-               xlabel='Predykcja')
-        plt.title('Macierz konfuzji: ' +
-                  self.__class__.__name__ + " - " + name)
+        ax.set(
+            xticks=np.arange(conf_matrix.shape[1]),
+            yticks=np.arange(conf_matrix.shape[0]),
+            ylabel="Właściwa klasa",
+            xlabel="Predykcja",
+        )
+        plt.title("Macierz konfuzji: " + self.__class__.__name__ + " - " + name)
         plt.show()
 
         return conf_matrix

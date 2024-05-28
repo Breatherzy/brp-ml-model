@@ -9,15 +9,16 @@ from matplotlib.widgets import SpanSelector
 matplotlib.use("TkAgg")
 
 # Load data from txt file
-tens_file_path = "../data/pretrained/tens/tens_inhale_stop.txt"
-acc_file_path = "../data/pretrained/acc/acc_inhale_stop.txt"
+FILENAME = "third_subject"
+tens_file_path = f"../data/pretrained/tens/tens_{FILENAME}.txt"
+acc_file_path = f"../data/pretrained/acc/acc_{FILENAME}.txt"
 tens_data = np.loadtxt(tens_file_path, delimiter=",")
 acc_data = np.loadtxt(acc_file_path, delimiter=",")
 
 # Constants
 COLOR_MAP = {-1.0: "red", 0.0: "green", 1.0: "blue", 2.0: "orange"}
-SECONDS_TIME = 15
-SELECTION_TIME_SIZE = 2
+SECONDS_TIME = 30
+SELECTION_TIME_SIZE = 30
 
 # Global variables
 current_start_index_tens = 0

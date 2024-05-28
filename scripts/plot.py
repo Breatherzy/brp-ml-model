@@ -8,7 +8,7 @@ from scripts.normalization import moving_average, normalize
 
 
 def interactive_plot(
-        features, labels_predicted, labels_actual, window_size=150, title="Interactive plot"
+    features, labels_predicted, labels_actual, window_size=150, title="Interactive plot"
 ):
     if len(labels_actual.shape) > 1 and labels_actual.shape[1] == 3:
         labels_actual = labels_actual.argmax(axis=1)
@@ -17,48 +17,47 @@ def interactive_plot(
     def plot(ax, start_index=0, predicted=True):
         ax.clear()
         colors = [
-            "red"
-            if m == 0
-            else "green"
-            if m == 1
-            else "blue"
-            if m == 2
-            else "yellow"
-            if m == 3
-            else "gray"
+            (
+                "red"
+                if m == 0
+                else (
+                    "green"
+                    if m == 1
+                    else "blue" if m == 2 else "yellow" if m == 3 else "gray"
+                )
+            )
             for m in labels_predicted
         ]
         if not predicted:
             colors = [
-                "red"
-                if m == 0
-                else "green"
-                if m == 1
-                else "blue"
-                if m == 2
-                else "yellow"
-                if m == 3
-                else "gray"
+                (
+                    "red"
+                    if m == 0
+                    else (
+                        "green"
+                        if m == 1
+                        else "blue" if m == 2 else "yellow" if m == 3 else "gray"
+                    )
+                )
                 for m in labels_actual
             ]
 
         ax.scatter(
             range(start_index, start_index + window_size),
-            features[start_index: start_index + window_size],
-            color=colors[start_index: start_index + window_size],
+            features[start_index : start_index + window_size],
+            color=colors[start_index : start_index + window_size],
             picker=True,
         )
         ax.plot(
             range(start_index, start_index + window_size),
-            features[start_index: start_index + window_size],
+            features[start_index : start_index + window_size],
             linestyle="-",
             color="gray",
             alpha=0.5,
         )
         ax.set_xlim(start_index, start_index + window_size)
-        ax.set_xlabel("" if predicted else 'Indeks próbki')
-        ax.set_ylabel(
-            f"Etykiety {'przewidywane' if predicted else 'wzorcowe'}")
+        ax.set_xlabel("" if predicted else "Indeks próbki")
+        ax.set_ylabel(f"Etykiety {'przewidywane' if predicted else 'wzorcowe'}")
 
     def on_key(event):
         nonlocal current_index
@@ -84,8 +83,7 @@ def interactive_plot(
 
 
 def plot_raw_data(sensor_type: str):
-    seconds, numbers = load_raw_data(
-        f"data/raw/{sensor_type}/{sensor_type}_test.csv")
+    seconds, numbers = load_raw_data(f"data/raw/{sensor_type}/{sensor_type}_test.csv")
 
     features = numbers
     labels = np.zeros(len(numbers))
@@ -94,8 +92,7 @@ def plot_raw_data(sensor_type: str):
 
 
 def plot_test_data(sensor_type: str, normalize_data=False):
-    seconds, numbers = load_raw_data(
-        f"data/raw/{sensor_type}/{sensor_type}_test.csv")
+    seconds, numbers = load_raw_data(f"data/raw/{sensor_type}/{sensor_type}_test.csv")
 
     plt.figure(figsize=(20, 10))
 
@@ -107,7 +104,7 @@ def plot_test_data(sensor_type: str, normalize_data=False):
         "tens": {
             "window": 5,
             "norm": 150,
-        }
+        },
     }
 
     if normalize_data:
@@ -122,8 +119,14 @@ def plot_test_data(sensor_type: str, normalize_data=False):
     if sensor_type == "tens" and not normalize_data:
         plt.ticklabel_format(axis="y", style="sci", scilimits=(0, 0))
 
-    plt.ylabel(f"{'Znormalizowana' if normalize_data else 'Surowa'} wartość z {'akcelerometru' if sensor_type == 'acc' else 'tensometru'}", fontsize=fontsize)
-    plt.title(f"{'Znormalizowane' if normalize_data else 'Surowe'} dane z {'akcelerometru' if sensor_type == 'acc' else 'tensometru'}", fontsize=fontsize)
+    plt.ylabel(
+        f"{'Znormalizowana' if normalize_data else 'Surowa'} wartość z {'akcelerometru' if sensor_type == 'acc' else 'tensometru'}",
+        fontsize=fontsize,
+    )
+    plt.title(
+        f"{'Znormalizowane' if normalize_data else 'Surowe'} dane z {'akcelerometru' if sensor_type == 'acc' else 'tensometru'}",
+        fontsize=fontsize,
+    )
 
     avg = 0
 
@@ -178,7 +181,7 @@ def plot_history(filename: str):
     plt.xlabel("Epoch")
     plt.ylabel("Accuracy")
     plt.legend()
-    plt.title(filename.split('/')[-1])
+    plt.title(filename.split("/")[-1])
     plt.show()
 
 

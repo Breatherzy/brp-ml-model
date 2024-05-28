@@ -13,7 +13,7 @@ The repository is structured as follows:
 - `models/`: Contains source code for the models.
 - `models/saves/`: Contains trained models.
 - `notebooks/`: Contains Jupyter notebooks.
-- `scripts/`: Contains scripts to run the models.
+- `scripts/`: Contains scripts to run the models. There are also scripts used for manual and automatic labeling.
 
 ## AUTHORS:
 

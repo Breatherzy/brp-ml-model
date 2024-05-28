@@ -3,7 +3,7 @@ import os
 import numpy as np
 
 from scripts.load_data import load_raw_data as load_data
-from scripts.normalization import normalize, moving_average
+from scripts.normalization import moving_average, normalize
 
 # Load and normalize data
 np.random.seed(42)
@@ -56,7 +56,7 @@ def check_monotonicity_change(subarray):
 def find_monotonicity_changes(array, window_size=WINDOW_SIZE):
     results = []
     for i in range(window_size, len(array)):
-        subarray = array[i - window_size: i]
+        subarray = array[i - window_size : i]
         result = check_monotonicity_change(subarray)
         results.append(result)
 
@@ -64,7 +64,7 @@ def find_monotonicity_changes(array, window_size=WINDOW_SIZE):
 
 
 def save_tagged_data(
-        data: list[float], monotonicity: list[float], time: list[float], filename: str
+    data: list[float], monotonicity: list[float], time: list[float], filename: str
 ) -> None:
     if "tens" in filename:
         directory = "../data/pretrained/tens/"
@@ -77,7 +77,7 @@ def save_tagged_data(
 
 current_directory = os.getcwd()
 desired_directory = (
-        os.path.dirname(os.path.dirname(current_directory)) + "/brp-ml-model/data/raw/acc/"
+    os.path.dirname(os.path.dirname(current_directory)) + "/brp-ml-model/data/raw/acc/"
 )
 for file in os.listdir(desired_directory):
     filename = os.fsdecode(file)
