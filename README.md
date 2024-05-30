@@ -15,10 +15,13 @@ The repository is structured as follows:
 - `notebooks/`: Contains Jupyter notebooks.
 - `scripts/`: Contains scripts to run the models. There are also scripts used for manual and automatic labeling.
 
-## AUTHORS:
+## Authors
 
 - **[Damian Jankowski](https://github.com/pingwin02)**
 - **[Kacper Karski](https://github.com/JaKarski)**
 - **[Filip Krawczak](https://github.com/prosto20025)**
 - **[Maciej Szefler](https://github.com/rysiekpol)**
 
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
