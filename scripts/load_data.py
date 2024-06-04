@@ -49,7 +49,7 @@ def save_data(filname, data):
 
 
 def save_sequences(
-    file_to_retrieve_sequences: str, file_to_save: str, size: int
+    file_to_retrieve_sequences: str, file_to_save: str, size: int, weight
 ) -> None:
     with open(file_to_retrieve_sequences):
         data, tags = load_tagged_data(file_to_retrieve_sequences)
@@ -57,7 +57,7 @@ def save_sequences(
     for i in range(size, len(data)):
         sequence = data[i - size : i]
         sequence.append(abs(max(sequence) - min(sequence)))
-        sequences.append(sequence + [tags[i - size] + 1])
+        sequences.append(sequence + [tags[i - size//2] + 1] + [weight])
 
     with open(file_to_save, "w") as file:
         for seq in sequences:
@@ -85,7 +85,7 @@ def empty_file(filename: str) -> None:
 
 
 def prepare_data_for_training(sensor) -> None:
-    input_size = sensor.value["size"] - 1
+    input_size = 15
     sensor_type = sensor.value["name"]
     empty_file(f"data/pretrained/{sensor_type}_sequence/{sensor_type}_concatenated.txt")
     for data in [
@@ -95,15 +95,25 @@ def prepare_data_for_training(sensor) -> None:
         "_hyper.txt",
         "_inhale_pause.txt",
         "_inhale_stop.txt",
+        "_inhale_stop.txt",
+        "_inhale_stop.txt",
+        "_inhale_stop.txt",
         "_normal.txt",
         "_shallow.txt",
         "_slow.txt",
         "_test.txt",
+        # "_second_subject.txt",
+        # "_third_subject.txt",
     ]:
+        if data == "_inhale_stop.txt":
+            weight = 100
+        else:
+            weight = 1
         save_sequences(
             f"data/pretrained/{sensor_type}/{sensor_type}" + data,
             f"data/pretrained/{sensor_type}_sequence/{sensor_type}" + data,
             input_size,
+            weight,
         )
 
         if data != "_test.txt":

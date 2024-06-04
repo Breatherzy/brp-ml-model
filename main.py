@@ -45,5 +45,5 @@ if __name__ == "__main__":
     model.save(f"models/saves/{SENSOR_NAME}/GRUModel_{SENSOR_NAME}")
     model.confusion_matrix(model.X_test, model.y_test, name=f"{SENSOR_NAME}_test")
     model.plot_prediction(model.X_test, name=f"{SENSOR_NAME}_test")
-    plot_history(f"models/saves/{SENSOR_NAME}/GRUModel.history")
-    plot_test_data(SENSOR_NAME, normalize_data=True)
+    # plot_history(f"models/saves/{SENSOR_NAME}/GRUModel.history")
+    # plot_test_data(SENSOR_NAME, normalize_data=True)

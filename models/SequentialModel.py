@@ -23,6 +23,7 @@ class SequentialModel(AbstractModel, ABC, metaclass=ABCMeta):
                 epochs=epochs,
                 batch_size=batch_size,
                 validation_data=(self.X_test, self.y_test),
+                sample_weight=self.sample_weight,
             )
             history = history.history
             with open(

@@ -59,11 +59,21 @@ class AbstractModel(metaclass=ABCMeta):
                 sequences.append([float(value) for value in line.split(",")])
             data_test = np.array(sequences)
 
-        self.X_train = data[:, :-1]
-        self.y_train = data[:, -1]
+        self.X_train = data[:, :-2]
+        self.y_train = data[:, -2]
+        xd = []
+        for i in self.y_train:
+            if i == 3.0:
+                xd.append(100)
+            else:
+                xd.append(1)
+        self.sample_weight = np.array(xd)
+        # self.sample_weight = data[:, -1]
 
-        self.X_test = data_test[:, :-1]
-        self.y_test = data_test[:, -1]
+        # self.X_test = data_test[:, :-2]
+        # self.y_test = data_test[:, -2]
+        self.X_test = self.X_train
+        self.y_test = self.y_train
 
         if expand_dims:
             self.X_train = np.expand_dims(self.X_train, axis=1)
