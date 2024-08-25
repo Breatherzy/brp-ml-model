@@ -51,7 +51,7 @@ def plot_data(ax, data, current_start_index, title):
         color=colors,
         picker=True,
     )
-    line = ax.plot(
+    ax.plot(
         gather_time_relevant_data[:, 2],
         gather_time_relevant_data[:, 0],
         linestyle="-",
@@ -125,7 +125,11 @@ def choose_color(initial_color):
 
 
 def on_key(event, data, current_start_index, ax):
-    global current_start_index_tens, current_start_index_acc, span_selector_active_tens, span_selector_active_acc
+    global \
+        current_start_index_tens, \
+        current_start_index_acc, \
+        span_selector_active_tens, \
+        span_selector_active_acc
     if event.key == "right":
         if ax == ax1:
             current_start_index_tens += SELECTION_TIME_SIZE

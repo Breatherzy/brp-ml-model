@@ -1,6 +1,5 @@
 from models.AbstractModel import SensorType
 from models.GRUModel import GRUModel
-from models.LSTMModel import LSTMModel
 from scripts.load_data import prepare_data_for_training
 from scripts.plot import plot_evaluation_history, plot_history, plot_test_data
 

@@ -80,7 +80,7 @@ def empty_file(filename: str) -> None:
     if not exists(f"data/pretrained/{folder}"):
         mkdir(f"data/pretrained/{folder}")
 
-    with open(filename, "w") as file:
+    with open(filename, "w"):
         pass
 
 

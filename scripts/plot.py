@@ -23,7 +23,11 @@ def interactive_plot(
                 else (
                     "green"
                     if m == 1
-                    else "blue" if m == 2 else "yellow" if m == 3 else "gray"
+                    else "blue"
+                    if m == 2
+                    else "yellow"
+                    if m == 3
+                    else "gray"
                 )
             )
             for m in labels_predicted
@@ -36,7 +40,11 @@ def interactive_plot(
                     else (
                         "green"
                         if m == 1
-                        else "blue" if m == 2 else "yellow" if m == 3 else "gray"
+                        else "blue"
+                        if m == 2
+                        else "yellow"
+                        if m == 3
+                        else "gray"
                     )
                 )
                 for m in labels_actual
@@ -82,8 +90,8 @@ def interactive_plot(
     plt.show()
 
 
-def plot_raw_data(sensor_type: str):
-    seconds, numbers = load_raw_data(f"data/raw/{sensor_type}/{sensor_type}_test.csv")
+def plot_raw_data(sensor_type: str, name: str):
+    seconds, numbers = load_raw_data(f"data/raw/{sensor_type}/{sensor_type}_{name}.csv")
 
     features = numbers
     labels = np.zeros(len(numbers))
