@@ -1,5 +1,6 @@
 from keras.layers import BatchNormalization, Dense
 from keras.models import Sequential
+from keras.src.layers import Activation
 
 from models.AbstractModel import SensorType
 from models.SequentialModel import SequentialModel
@@ -15,10 +16,12 @@ class BNModel(SequentialModel):
         if self.check_if_data_is_loaded():
             self.model = Sequential(
                 [
-                    Dense(64, input_shape=(self.X_train.shape[1],), activation="relu"),
+                    Dense(64, input_shape=(self.X_train.shape[1],)),
                     BatchNormalization(),
-                    Dense(64, activation="relu"),
+                    Activation("relu"),
+                    Dense(64),
                     BatchNormalization(),
+                    Activation("relu"),
                     Dense(4, activation="softmax"),
                 ]
             )

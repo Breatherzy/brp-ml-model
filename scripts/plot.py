@@ -8,9 +8,14 @@ from scripts.normalization import moving_average, normalize
 
 
 def interactive_plot(
-    features, labels_predicted, labels_actual, window_size=150, title="Interactive plot"
+    features, labels_predicted, labels_actual, window_size=300, title="Interactive plot"
 ):
-    if len(labels_actual.shape) > 1 and labels_actual.shape[1] == 3:
+    # features = features[9:]
+    # labels_predicted = labels_predicted[:-9]
+    # labels_actual = labels_actual[:-9]
+    if len(labels_predicted.shape) > 1 and labels_predicted.shape[1] == 3:
+        labels_predicted = labels_predicted.argmax(axis=1)
+    if len(labels_actual.shape) > 1 and labels_actual.shape[1] >= 3:
         labels_actual = labels_actual.argmax(axis=1)
     current_index = 0
 

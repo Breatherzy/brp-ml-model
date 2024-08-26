@@ -1,3 +1,4 @@
+import time
 from models.AbstractModel import SensorType
 from models.GRUModel import GRUModel
 from models.LSTMModel import LSTMModel
@@ -33,13 +34,18 @@ def evaluate_epochs():
 
 if __name__ == "__main__":
     prepare_data_for_training(sensor=SENSOR)
+    start_time = time.time()
     model = GRUModel()
     model.load_data(
         filename=f"data/pretrained/{SENSOR_NAME}_sequence/{SENSOR_NAME}_concatenated.txt",
         sensor_type=f"{SENSOR_NAME}",
     )
     model.compile()
-    model.fit(sensor_type=f"{SENSOR_NAME}", epochs=50)
+    model.fit(sensor_type=f"{SENSOR_NAME}", epochs=100)
+    # model.plot_prediction(model.X_test)
+    model.retrain_with_misclassified(epochs=100)
+    end_time = time.time()
+    print(f"Training time: {end_time - start_time} seconds")
 
     # model.load(f"models/saves/{SENSOR_NAME}/GRUModel_{SENSOR_NAME}")
     model.save(f"models/saves/{SENSOR_NAME}/GRUModel_{SENSOR_NAME}")

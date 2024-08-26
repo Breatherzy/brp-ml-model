@@ -30,6 +30,7 @@ class SequentialModel(AbstractModel, ABC, metaclass=ABCMeta):
             ) as file:
                 file.write(str(history) + "\n")
             self.is_model_fitted = True
+            self.save_misclassified_samples(f"data/misclassified/{sensor_type}_misclassified.txt")
 
     def predict(self, X_test):
         if self.check_if_model_is_fitted():
@@ -46,6 +47,57 @@ class SequentialModel(AbstractModel, ABC, metaclass=ABCMeta):
         print("Evaluation result:", result)
         return result
 
+    def get_misclassified_samples(self):
+        y_pred = self.predict(self.X_test)
+        if len(self.y_test.shape) > 1:
+            y_test_to_compare = np.argmax(self.y_test, axis=1)
+        else:
+            y_test_to_compare = self.y_test
+        misclassified_indices = np.where(y_pred != y_test_to_compare)[0]
+        misclassified_samples = self.X_test[misclassified_indices]
+        misclassified_labels = y_test_to_compare[misclassified_indices]
+        return misclassified_samples, misclassified_labels
+
+    def save_misclassified_samples(self, filename):
+        samples, labels = self.get_misclassified_samples()
+        with open(filename, "w") as file:
+            for sample, label in zip(samples, labels):
+                flattened_sample = sample.flatten()
+                combined = list(flattened_sample) + [label]
+                file.write(",".join(map(str, combined)) + "\n")
+
+    def augment_data(self, X, y):
+        self.load_data(
+            filename=f"data/misclassified/tens_misclassified.txt",
+            sensor_type=f"tens",
+        )
+        xd1 = self.X_train
+        yd1 = self.y_train
+        self.X_train = np.vstack((self.X_train, np.array(X)))
+        self.y_train = np.concatenate((self.y_train, np.array(y)))
+        return xd1, yd1
+
+    def calculate_sample_weights(self, misclassified_indices):
+        sample_weights = np.ones(len(self.X_train))
+        sample_weights[:misclassified_indices] = 10  # Increase weight for misclassified samples
+        return sample_weights
+
+    def retrain_with_misclassified(self, epochs=50, batch_size=500):
+        augmented_X_train, augmented_y_train = self.augment_data(self.X_train, self.y_train)
+        sample_weights = self.calculate_sample_weights(len(augmented_X_train))
+
+        history = self.model.fit(
+            self.X_train,
+            self.y_train,
+            epochs=epochs,
+            batch_size=batch_size,
+            validation_data=(self.X_test, self.y_test),
+            sample_weight=sample_weights,
+            verbose=1
+        )
+        self.save_misclassified_samples(f"data/misclassified/tens_misclassified.txt")
+        history = history.history
+        return history
     def save(self, filename):
         self.model.save(filename + ".keras")
         converter = tf.lite.TFLiteConverter.from_keras_model(self.model)

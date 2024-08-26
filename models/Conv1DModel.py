@@ -1,6 +1,7 @@
 import numpy as np
 from keras.layers import Conv1D, Dense, Flatten
 from keras.models import Sequential
+from keras.src.layers import MaxPooling1D
 
 from models.AbstractModel import SensorType
 from models.SequentialModel import SequentialModel
@@ -19,9 +20,10 @@ class Conv1DModel(SequentialModel):
                         kernel_size=1,
                         activation="relu",
                         input_shape=(1, self.X_train.shape[2]),
+                        strides=1,
                     ),
                     Flatten(),
-                    Dense(50, activation="relu"),
+                    Dense(50, activation="tanh"),
                     Dense(4, activation="softmax"),
                 ]
             )
