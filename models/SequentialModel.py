@@ -50,13 +50,13 @@ class SequentialModel(AbstractModel, ABC, metaclass=ABCMeta):
         return result
 
     def get_misclassified_samples(self):
-        y_pred = self.predict(self.X_test)
-        if len(self.y_test.shape) > 1:
-            y_test_to_compare = np.argmax(self.y_test, axis=1)
+        y_pred = self.predict(self.X_train)
+        if len(self.y_train.shape) > 1:
+            y_test_to_compare = np.argmax(self.y_train, axis=1)
         else:
-            y_test_to_compare = self.y_test
+            y_test_to_compare = self.y_train
         misclassified_indices = np.where(y_pred != y_test_to_compare)[0]
-        misclassified_samples = self.X_test[misclassified_indices]
+        misclassified_samples = self.X_train[misclassified_indices]
         misclassified_labels = y_test_to_compare[misclassified_indices]
         return misclassified_samples, misclassified_labels
 
