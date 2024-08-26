@@ -155,7 +155,7 @@ class AbstractModel(metaclass=ABCMeta):
         """
         Method for plotting the prediction.
         """
-        title = f"{self.__class__.__name__} - {name} - {self.evaluate() * 100:.2f}%"
+        title = f"{self.__class__.__name__} - {self.evaluate() * 100:.2f}%"
         if X_test.shape[1] == 1:
             interactive_plot(
                 self.X_test[:, -1, 0], self.predict(X_test), self.y_test, title=title

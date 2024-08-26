@@ -19,9 +19,10 @@ class Conv1DModel(SequentialModel):
                         kernel_size=1,
                         activation="relu",
                         input_shape=(1, self.X_train.shape[2]),
+                        strides=1,
                     ),
                     Flatten(),
-                    Dense(50, activation="relu"),
+                    Dense(50, activation="tanh"),
                     Dense(4, activation="softmax"),
                 ]
             )
