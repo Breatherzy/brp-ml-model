@@ -30,7 +30,9 @@ class SequentialModel(AbstractModel, ABC, metaclass=ABCMeta):
             ) as file:
                 file.write(str(history) + "\n")
             self.is_model_fitted = True
-            self.save_misclassified_samples(f"data/misclassified/{sensor_type}_misclassified.txt")
+            self.save_misclassified_samples(
+                f"data/misclassified/{sensor_type}_misclassified.txt"
+            )
 
     def predict(self, X_test):
         if self.check_if_model_is_fitted():
@@ -66,10 +68,10 @@ class SequentialModel(AbstractModel, ABC, metaclass=ABCMeta):
                 combined = list(flattened_sample) + [label]
                 file.write(",".join(map(str, combined)) + "\n")
 
-    def augment_data(self, X, y):
+    def augment_data(self, X, y, sensor_type: str = "tens"):
         self.load_data(
-            filename=f"data/misclassified/tens_misclassified.txt",
-            sensor_type=f"tens",
+            filename="data/misclassified/tens_misclassified.txt",
+            sensor_type=sensor_type,
         )
         xd1 = self.X_train
         yd1 = self.y_train
@@ -79,11 +81,19 @@ class SequentialModel(AbstractModel, ABC, metaclass=ABCMeta):
 
     def calculate_sample_weights(self, misclassified_indices):
         sample_weights = np.ones(len(self.X_train))
-        sample_weights[:misclassified_indices] = 10  # Increase weight for misclassified samples
+        sample_weights[:misclassified_indices] = (
+            10  # Increase weight for misclassified samples
+        )
         return sample_weights
 
-    def retrain_with_misclassified(self, epochs=50, batch_size=500):
-        augmented_X_train, augmented_y_train = self.augment_data(self.X_train, self.y_train)
+    def retrain_with_misclassified(
+        self, epochs=50, batch_size=500, sensor_type: str = "tens"
+    ):
+        augmented_X_train, augmented_y_train = self.augment_data(
+            self.X_train,
+            self.y_train,
+            sensor_type=sensor_type,
+        )
         sample_weights = self.calculate_sample_weights(len(augmented_X_train))
 
         history = self.model.fit(
@@ -93,11 +103,12 @@ class SequentialModel(AbstractModel, ABC, metaclass=ABCMeta):
             batch_size=batch_size,
             validation_data=(self.X_test, self.y_test),
             sample_weight=sample_weights,
-            verbose=1
+            verbose=1,
         )
         self.save_misclassified_samples(f"data/misclassified/tens_misclassified.txt")
         history = history.history
         return history
+
     def save(self, filename):
         self.model.save(filename + ".keras")
         converter = tf.lite.TFLiteConverter.from_keras_model(self.model)

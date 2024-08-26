@@ -1,7 +1,6 @@
 import numpy as np
 from keras.layers import Conv1D, Dense, Flatten
 from keras.models import Sequential
-from keras.src.layers import MaxPooling1D
 
 from models.AbstractModel import SensorType
 from models.SequentialModel import SequentialModel

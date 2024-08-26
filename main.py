@@ -1,4 +1,5 @@
 import time
+
 from models.AbstractModel import SensorType
 from models.GRUModel import GRUModel
 from models.LSTMModel import LSTMModel
@@ -43,7 +44,7 @@ if __name__ == "__main__":
     model.compile()
     model.fit(sensor_type=f"{SENSOR_NAME}", epochs=100)
     # model.plot_prediction(model.X_test)
-    model.retrain_with_misclassified(epochs=100)
+    model.retrain_with_misclassified(epochs=100, sensor_type=SENSOR_NAME)
     end_time = time.time()
     print(f"Training time: {end_time - start_time} seconds")
 
