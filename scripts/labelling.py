@@ -9,7 +9,7 @@ from matplotlib.widgets import SpanSelector
 matplotlib.use("TkAgg")
 
 # Load data from txt file
-FILENAME = "normal"
+FILENAME = "test"
 tens_file_path = f"../data/pretrained/tens/tens_{FILENAME}.txt"
 acc_file_path = f"../data/pretrained/acc/acc_{FILENAME}.txt"
 tens_data = np.loadtxt(tens_file_path, delimiter=",")
