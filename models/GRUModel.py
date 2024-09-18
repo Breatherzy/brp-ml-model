@@ -1,6 +1,8 @@
 import numpy as np
 from keras.layers import GRU, Dense
 from keras.models import Sequential
+from keras.src.layers import Dropout, BatchNormalization, Activation
+from keras.src.regularizers import l2
 
 from models.AbstractModel import SensorType
 from models.SequentialModel import SequentialModel
@@ -15,11 +17,18 @@ class GRUModel(SequentialModel):
             self.model = Sequential(
                 [
                     GRU(
-                        50,
-                        activation="relu",
+                        64,
                         input_shape=(self.X_train.shape[1], self.X_train.shape[2]),
+                        kernel_regularizer=l2(0.001),
+
                     ),
-                    Dense(50, activation="tanh"),
+                    # BatchNormalization(),
+                    Activation("relu"),
+                    Dropout(0.5),
+                    Dense(32),
+                    # BatchNormalization(),
+                    Activation("tanh"),
+                    Dropout(0.5),
                     Dense(4, activation="softmax"),
                 ]
             )
