@@ -55,7 +55,7 @@ def save_sequences(
         data, tags = load_tagged_data(file_to_retrieve_sequences)
     sequences = []
     for i in range(size, len(data)):
-        position = i - size
+        position = i - size + size//2
         sequence = data[i - size: i]
         sequence.append(abs(max(sequence) - min(sequence)))
         if certain_tags is not None:
@@ -107,7 +107,7 @@ def prepare_data_for_training(sensor) -> None:
         "_shallow.txt",
         "_slow.txt",
         "_test.txt",
-        # "_yellow.txt",
+        "_yellow.txt",
         # "_second_subject.txt",
     ]:
         # save_sequences(

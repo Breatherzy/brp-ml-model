@@ -12,7 +12,7 @@ from scripts.plot import interactive_plot
 class SensorType(Enum):
     TENSOMETER = {"name": "tens", "size": 6}
     ACCELEROMETER = {"name": "acc", "size": 12}
-    WIT_ACCELEROMETER = {"name": "acc", "size": 6}
+    WIT_ACCELEROMETER = {"name": "acc", "size": 12}
 
 
 class AbstractModel(metaclass=ABCMeta):
@@ -53,7 +53,7 @@ class AbstractModel(metaclass=ABCMeta):
             data = np.array(sequences)
 
         with open(
-            f"data/record_18-04-2024/pretrained/{sensor_type}_sequence/{sensor_type}_test.txt", "r"
+            f"data/pretrained/{sensor_type}_sequence/{sensor_type}_test.txt", "r"
         ) as f:
             sequences = []
             for line in f.readlines():
