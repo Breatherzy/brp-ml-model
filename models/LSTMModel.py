@@ -1,6 +1,8 @@
 import numpy as np
 from keras.layers import LSTM, Dense
 from keras.models import Sequential
+from keras.src.layers import Dropout
+from keras.src.regularizers import l2
 
 from models.AbstractModel import SensorType
 from models.SequentialModel import SequentialModel
@@ -15,11 +17,14 @@ class LSTMModel(SequentialModel):
             self.model = Sequential(
                 [
                     LSTM(
-                        50,
+                        64,
                         activation="relu",
                         input_shape=(self.X_train.shape[1], self.X_train.shape[2]),
+                        kernel_regularizer=l2(0.001),
                     ),
-                    Dense(10, activation="relu"),
+                    Dropout(0.5),
+                    Dense(32, activation="relu"),
+                    Dropout(0.5),
                     Dense(4, activation="softmax"),
                 ]
             )

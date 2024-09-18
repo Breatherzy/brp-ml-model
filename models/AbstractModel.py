@@ -12,6 +12,7 @@ from scripts.plot import interactive_plot
 class SensorType(Enum):
     TENSOMETER = {"name": "tens", "size": 6}
     ACCELEROMETER = {"name": "acc", "size": 12}
+    WIT_ACCELEROMETER = {"name": "acc", "size": 12}
 
 
 class AbstractModel(metaclass=ABCMeta):
@@ -75,6 +76,16 @@ class AbstractModel(metaclass=ABCMeta):
             self.y_test = to_categorical(
                 self.y_test, num_classes=len(np.unique(self.y_test))
             )
+
+    def get_random_samples(self, percentage: float):
+        """
+        Method for getting random samples from the data.
+        """
+        indices = np.random.choice(
+            range(len(self.X_train)), int(percentage * len(self.X_train)), replace=False
+        )
+        self.X_train = self.X_train[indices]
+        self.y_train = self.y_train[indices]
 
     @abstractmethod
     def compile(self):

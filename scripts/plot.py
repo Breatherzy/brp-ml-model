@@ -10,6 +10,10 @@ from scripts.normalization import moving_average, normalize
 def interactive_plot(
     features, labels_predicted, labels_actual, window_size=150, title="Interactive plot"
 ):
+    # features = features[6:]
+    # labels_predicted = labels_predicted[:-6]
+    # labels_actual = labels_actual[:-6]
+
     if len(labels_actual.shape) > 1 and labels_actual.shape[1] == 3:
         labels_actual = labels_actual.argmax(axis=1)
     current_index = 0
@@ -23,7 +27,11 @@ def interactive_plot(
                 else (
                     "green"
                     if m == 1
-                    else "blue" if m == 2 else "yellow" if m == 3 else "gray"
+                    else "blue"
+                    if m == 2
+                    else "yellow"
+                    if m == 3
+                    else "gray"
                 )
             )
             for m in labels_predicted
@@ -36,7 +44,11 @@ def interactive_plot(
                     else (
                         "green"
                         if m == 1
-                        else "blue" if m == 2 else "yellow" if m == 3 else "gray"
+                        else "blue"
+                        if m == 2
+                        else "yellow"
+                        if m == 3
+                        else "gray"
                     )
                 )
                 for m in labels_actual
@@ -56,8 +68,8 @@ def interactive_plot(
             alpha=0.5,
         )
         ax.set_xlim(start_index, start_index + window_size)
-        ax.set_xlabel("" if predicted else "Indeks próbki")
-        ax.set_ylabel(f"Etykiety {'przewidywane' if predicted else 'wzorcowe'}")
+        ax.set_xlabel("" if predicted else "Sample Index")
+        ax.set_ylabel(f"{'Predicted' if predicted else 'Model'} labels")
 
     def on_key(event):
         nonlocal current_index
@@ -82,8 +94,8 @@ def interactive_plot(
     plt.show()
 
 
-def plot_raw_data(sensor_type: str):
-    seconds, numbers = load_raw_data(f"data/raw/{sensor_type}/{sensor_type}_test.csv")
+def plot_raw_data(sensor_type: str, name: str):
+    seconds, numbers = load_raw_data(f"data/raw/{sensor_type}/{sensor_type}_{name}.csv")
 
     features = numbers
     labels = np.zeros(len(numbers))

@@ -11,6 +11,14 @@ numbers = []
 number_string = []
 WINDOW_SIZE = 5
 
+SENSOR_NAME = "acc"
+
+current_directory = os.getcwd()
+desired_directory = (
+    os.path.dirname(os.path.dirname(current_directory))
+    + f"/brp-ml-model/data/raw/{SENSOR_NAME}/"
+)
+
 
 def monotonicity(data, data_size=5) -> list[int]:
     deriv = np.gradient(data)
@@ -66,6 +74,11 @@ def find_monotonicity_changes(array, window_size=WINDOW_SIZE):
 def save_tagged_data(
     data: list[float], monotonicity: list[float], time: list[float], filename: str
 ) -> None:
+    if not os.path.exists("../data/pretrained/"):
+        os.mkdir("../data/pretrained/")
+        os.mkdir("../data/pretrained/acc/")
+        os.mkdir("../data/pretrained/tens/")
+
     if "tens" in filename:
         directory = "../data/pretrained/tens/"
     else:
@@ -75,10 +88,6 @@ def save_tagged_data(
             file.write(f"{data[i]},{monotonicity[i]},{time[i]}\n")
 
 
-current_directory = os.getcwd()
-desired_directory = (
-    os.path.dirname(os.path.dirname(current_directory)) + "/brp-ml-model/data/raw/acc/"
-)
 for file in os.listdir(desired_directory):
     filename = os.fsdecode(file)
     if filename.endswith(".csv"):
@@ -92,8 +101,8 @@ for file in os.listdir(desired_directory):
             numbers = moving_average(numbers, 5)
             numbers = normalize(numbers, 150)
 
-        if desired_directory[-4:] == "acc/":
-            numbers = [-x for x in numbers]
+        # if desired_directory[-4:] == "acc/":
+        #     numbers = [-x for x in numbers]
         # Rotate numbers within the range of -1 to 1
 
         mono_tags = monotonicity(numbers, data_size=WINDOW_SIZE)

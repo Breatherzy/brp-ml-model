@@ -9,16 +9,16 @@ from matplotlib.widgets import SpanSelector
 matplotlib.use("TkAgg")
 
 # Load data from txt file
-FILENAME = "normal"
+FILENAME = "yellow"
 tens_file_path = f"../data/pretrained/tens/tens_{FILENAME}.txt"
 acc_file_path = f"../data/pretrained/acc/acc_{FILENAME}.txt"
 tens_data = np.loadtxt(tens_file_path, delimiter=",")
 acc_data = np.loadtxt(acc_file_path, delimiter=",")
 
 # Constants
-COLOR_MAP = {-1.0: "red", 0.0: "green", 1.0: "blue", 2.0: "orange"}
-SECONDS_TIME = 30
-SELECTION_TIME_SIZE = 30
+COLOR_MAP = {-1.0: "red", 0.0: "green", 1.0: "blue", 2.0: "orange", 999.0: "black"}
+SECONDS_TIME = 15
+SELECTION_TIME_SIZE = 10
 
 # Global variables
 current_start_index_tens = 0
@@ -51,7 +51,7 @@ def plot_data(ax, data, current_start_index, title):
         color=colors,
         picker=True,
     )
-    line = ax.plot(
+    ax.plot(
         gather_time_relevant_data[:, 2],
         gather_time_relevant_data[:, 0],
         linestyle="-",
@@ -105,8 +105,9 @@ def choose_color(initial_color):
         0.0: "OUT NO BREATH",
         1.0: "BREATH IN",
         2.0: "IN NO BREATH",
+        999.0: "NO RELEVANT"
     }
-    for label, color in {-1.0: "red", 0.0: "green", 1.0: "blue", 2.0: "orange"}.items():
+    for label, color in COLOR_MAP.items():
         button_label = BREATH_STATE[label]
         button = Button(
             frame,
@@ -125,7 +126,11 @@ def choose_color(initial_color):
 
 
 def on_key(event, data, current_start_index, ax):
-    global current_start_index_tens, current_start_index_acc, span_selector_active_tens, span_selector_active_acc
+    global \
+        current_start_index_tens, \
+        current_start_index_acc, \
+        span_selector_active_tens, \
+        span_selector_active_acc
     if event.key == "right":
         if ax == ax1:
             current_start_index_tens += SELECTION_TIME_SIZE
@@ -187,6 +192,24 @@ def on_span_select(
     update_point_color(data_start, data_end, new_color, data_acc, acc_file_path)
 
 
+def on_span_select_acc(
+        xmin,
+        xmax,
+        data_tens,
+        data_acc,
+        current_start_index,
+        ax,
+        acc_file_path,
+):
+    start_index = max(xmin, 0)
+    end_index = min(xmax, max(data_acc[:, 2]))
+    data_start, data_end = get_data_indexes_according_to_time(
+        data_acc, start_index, end_index
+    )
+    new_color = choose_color(int(data_acc[data_start, 1]))
+    update_point_color(data_start, data_end, new_color, data_acc, acc_file_path)
+
+
 def tk_process(q):
     plt.show()
     q.put("done")
@@ -235,14 +258,13 @@ span_selector_tens.set_active(False)
 # Create a SpanSelector for acc plot
 span_selector_acc = SpanSelector(
     ax2,
-    lambda xmin, xmax: on_span_select(
+    lambda xmin, xmax: on_span_select_acc(
         xmin,
         xmax,
         tens_data,
         acc_data,
         current_start_index_acc,
         ax2,
-        tens_file_path,
         acc_file_path,
     ),
     "horizontal",

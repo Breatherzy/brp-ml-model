@@ -49,15 +49,21 @@ def save_data(filname, data):
 
 
 def save_sequences(
-    file_to_retrieve_sequences: str, file_to_save: str, size: int
+    file_to_retrieve_sequences: str, file_to_save: str, size: int, certain_tags: list[int] | None = None,
 ) -> None:
     with open(file_to_retrieve_sequences):
         data, tags = load_tagged_data(file_to_retrieve_sequences)
     sequences = []
     for i in range(size, len(data)):
-        sequence = data[i - size : i]
+        position = i - size + size//2
+        sequence = data[i - size: i]
         sequence.append(abs(max(sequence) - min(sequence)))
-        sequences.append(sequence + [tags[i - size] + 1])
+        if certain_tags is not None:
+            if tags[position] in certain_tags:
+                sequences.append(sequence + [tags[position] + 1])
+        else:
+            if tags[position] != 999.0:
+                sequences.append(sequence + [tags[position] + 1])
 
     with open(file_to_save, "w") as file:
         for seq in sequences:
@@ -80,14 +86,16 @@ def empty_file(filename: str) -> None:
     if not exists(f"data/pretrained/{folder}"):
         mkdir(f"data/pretrained/{folder}")
 
-    with open(filename, "w") as file:
+    with open(filename, "w"):
         pass
 
 
 def prepare_data_for_training(sensor) -> None:
     input_size = sensor.value["size"] - 1
     sensor_type = sensor.value["name"]
-    empty_file(f"data/pretrained/{sensor_type}_sequence/{sensor_type}_concatenated.txt")
+    directory = f"data/pretrained"
+    # directory2 = f"data/record_18-04-2024/pretrained"
+    empty_file(f"{directory}/{sensor_type}_sequence/{sensor_type}_concatenated.txt")
     for data in [
         "_cough.txt",
         "_exhale_pause.txt",
@@ -99,15 +107,26 @@ def prepare_data_for_training(sensor) -> None:
         "_shallow.txt",
         "_slow.txt",
         "_test.txt",
+        "_yellow.txt",
+        # "_second_subject.txt",
     ]:
+        # save_sequences(
+        #     f"{directory2}/{sensor_type}/{sensor_type}" + data,
+        #     f"{directory2}/{sensor_type}_sequence/{sensor_type}" + data,
+        #     input_size,
+        # )
         save_sequences(
-            f"data/pretrained/{sensor_type}/{sensor_type}" + data,
-            f"data/pretrained/{sensor_type}_sequence/{sensor_type}" + data,
+            f"{directory}/{sensor_type}/{sensor_type}" + data,
+            f"{directory}/{sensor_type}_sequence/{sensor_type}" + data,
             input_size,
         )
 
         if data != "_test.txt":
             save_sequences_to_concatenated(
-                f"data/pretrained/{sensor_type}_sequence/{sensor_type}" + data,
-                f"data/pretrained/{sensor_type}_sequence/{sensor_type}_concatenated.txt",
+                f"{directory}/{sensor_type}_sequence/{sensor_type}" + data,
+                f"{directory}/{sensor_type}_sequence/{sensor_type}_concatenated.txt",
             )
+            # save_sequences_to_concatenated(
+            #     f"{directory2}/{sensor_type}_sequence/{sensor_type}" + data,
+            #     f"{directory}/{sensor_type}_sequence/{sensor_type}_concatenated.txt",
+            # )

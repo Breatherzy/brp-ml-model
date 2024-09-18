@@ -1,6 +1,8 @@
 import numpy as np
 from keras.layers import Conv1D, Dense, Flatten
 from keras.models import Sequential
+from keras.src.layers import Dropout
+from keras.src.regularizers import l2
 
 from models.AbstractModel import SensorType
 from models.SequentialModel import SequentialModel
@@ -21,7 +23,7 @@ class Conv1DModel(SequentialModel):
                         input_shape=(1, self.X_train.shape[2]),
                     ),
                     Flatten(),
-                    Dense(50, activation="relu"),
+                    Dense(32, activation="tanh"),
                     Dense(4, activation="softmax"),
                 ]
             )
