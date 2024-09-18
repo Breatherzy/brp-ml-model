@@ -47,17 +47,17 @@ class SequentialModel(AbstractModel, ABC, metaclass=ABCMeta):
         return result
 
     def save(self, filename):
-        self.model.save(filename + ".k5")
-        # converter = tf.lite.TFLiteConverter.from_keras_model(self.model)
-        # converter._experimental_lower_tensor_list_ops = False
-        # converter.target_spec.supported_ops = [
-        #     tf.lite.OpsSet.TFLITE_BUILTINS,
-        #     tf.lite.OpsSet.SELECT_TF_OPS,
-        # ]
-        # tflite_model = converter.convert()
-        # with open(filename + ".tflite", "wb") as f:
-        #     f.write(tflite_model)
+        self.model.save(filename + ".keras")
+        converter = tf.lite.TFLiteConverter.from_keras_model(self.model)
+        converter._experimental_lower_tensor_list_ops = False
+        converter.target_spec.supported_ops = [
+            tf.lite.OpsSet.TFLITE_BUILTINS,
+            tf.lite.OpsSet.SELECT_TF_OPS,
+        ]
+        tflite_model = converter.convert()
+        with open(filename + ".tflite", "wb") as f:
+            f.write(tflite_model)
 
     def load(self, filename):
-        self.model = load_model(filename + ".h5")
+        self.model = load_model(filename + ".keras")
         self.is_model_loaded = True

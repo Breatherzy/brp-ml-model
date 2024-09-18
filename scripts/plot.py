@@ -10,9 +10,9 @@ from scripts.normalization import moving_average, normalize
 def interactive_plot(
     features, labels_predicted, labels_actual, window_size=150, title="Interactive plot"
 ):
-    features = features[6:]
-    labels_predicted = labels_predicted[:-6]
-    labels_actual = labels_actual[:-6]
+    # features = features[6:]
+    # labels_predicted = labels_predicted[:-6]
+    # labels_actual = labels_actual[:-6]
 
     if len(labels_actual.shape) > 1 and labels_actual.shape[1] == 3:
         labels_actual = labels_actual.argmax(axis=1)
