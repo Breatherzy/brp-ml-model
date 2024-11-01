@@ -9,16 +9,16 @@ from matplotlib.widgets import SpanSelector
 matplotlib.use("TkAgg")
 
 # Load data from txt file
-FILENAME = "yellow"
-tens_file_path = f"../data/pretrained/tens/tens_{FILENAME}.txt"
-acc_file_path = f"../data/pretrained/acc/acc_{FILENAME}.txt"
+FILENAME = "test"
+tens_file_path = f"../data/record_18-04-2024/pretrained/tens/tens_{FILENAME}.txt"
+acc_file_path = f"../data/record_18-04-2024/pretrained/acc/acc_{FILENAME}.txt"
 tens_data = np.loadtxt(tens_file_path, delimiter=",")
 acc_data = np.loadtxt(acc_file_path, delimiter=",")
 
 # Constants
 COLOR_MAP = {-1.0: "red", 0.0: "green", 1.0: "blue", 2.0: "orange", 999.0: "black"}
 SECONDS_TIME = 15
-SELECTION_TIME_SIZE = 10
+SELECTION_TIME_SIZE = 15
 
 # Global variables
 current_start_index_tens = 0
@@ -105,7 +105,7 @@ def choose_color(initial_color):
         0.0: "OUT NO BREATH",
         1.0: "BREATH IN",
         2.0: "IN NO BREATH",
-        999.0: "NO RELEVANT"
+        999.0: "NO RELEVANT",
     }
     for label, color in COLOR_MAP.items():
         button_label = BREATH_STATE[label]
@@ -126,11 +126,7 @@ def choose_color(initial_color):
 
 
 def on_key(event, data, current_start_index, ax):
-    global \
-        current_start_index_tens, \
-        current_start_index_acc, \
-        span_selector_active_tens, \
-        span_selector_active_acc
+    global current_start_index_tens, current_start_index_acc, span_selector_active_tens, span_selector_active_acc
     if event.key == "right":
         if ax == ax1:
             current_start_index_tens += SELECTION_TIME_SIZE
@@ -193,13 +189,13 @@ def on_span_select(
 
 
 def on_span_select_acc(
-        xmin,
-        xmax,
-        data_tens,
-        data_acc,
-        current_start_index,
-        ax,
-        acc_file_path,
+    xmin,
+    xmax,
+    data_tens,
+    data_acc,
+    current_start_index,
+    ax,
+    acc_file_path,
 ):
     start_index = max(xmin, 0)
     end_index = min(xmax, max(data_acc[:, 2]))
