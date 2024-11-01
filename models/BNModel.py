@@ -1,5 +1,6 @@
 from keras.layers import BatchNormalization, Dense
 from keras.models import Sequential
+from keras.src.layers import Dropout
 
 from models.AbstractModel import SensorType
 from models.SequentialModel import SequentialModel
@@ -16,8 +17,10 @@ class BNModel(SequentialModel):
             self.model = Sequential(
                 [
                     Dense(64, input_shape=(self.X_train.shape[1],), activation="relu"),
+                    Dropout(0.5),
                     BatchNormalization(),
-                    Dense(64, activation="relu"),
+                    Dense(32, activation="tanh"),
+                    Dropout(0.5),
                     BatchNormalization(),
                     Dense(4, activation="softmax"),
                 ]

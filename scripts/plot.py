@@ -27,11 +27,7 @@ def interactive_plot(
                 else (
                     "green"
                     if m == 1
-                    else "blue"
-                    if m == 2
-                    else "yellow"
-                    if m == 3
-                    else "gray"
+                    else "blue" if m == 2 else "yellow" if m == 3 else "gray"
                 )
             )
             for m in labels_predicted
@@ -44,11 +40,7 @@ def interactive_plot(
                     else (
                         "green"
                         if m == 1
-                        else "blue"
-                        if m == 2
-                        else "yellow"
-                        if m == 3
-                        else "gray"
+                        else "blue" if m == 2 else "yellow" if m == 3 else "gray"
                     )
                 )
                 for m in labels_actual

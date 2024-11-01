@@ -23,7 +23,7 @@ class LSTMModel(SequentialModel):
                         kernel_regularizer=l2(0.001),
                     ),
                     Dropout(0.5),
-                    Dense(32, activation="relu"),
+                    Dense(32, activation="tanh"),
                     Dropout(0.5),
                     Dense(4, activation="softmax"),
                 ]

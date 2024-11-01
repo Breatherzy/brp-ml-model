@@ -23,7 +23,9 @@ class Conv1DModel(SequentialModel):
                         input_shape=(1, self.X_train.shape[2]),
                     ),
                     Flatten(),
+                    Dropout(0.5),
                     Dense(32, activation="tanh"),
+                    Dropout(0.5),
                     Dense(4, activation="softmax"),
                 ]
             )

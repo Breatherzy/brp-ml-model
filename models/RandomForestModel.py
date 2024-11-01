@@ -11,7 +11,7 @@ class RandomForestModel(AbstractModel):
         if self.check_if_data_is_loaded():
             self.model = RandomForestClassifier(random_state=42, max_depth=10)
 
-    def fit(self, weights=None):
+    def fit(self, weights=None, sensor_type=None, epochs=100, batch_size=32):
         if self.check_if_model_is_compiled():
             self.model.fit(self.X_train, self.y_train)
             self.is_model_fitted = True
