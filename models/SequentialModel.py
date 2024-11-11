@@ -78,12 +78,13 @@ class SequentialModel(AbstractModel, ABC, metaclass=ABCMeta):
         """
         breath_count = 0
         breath_in_progress = False
+        results = list(results)
 
-        for prediction in results:
-            if prediction == 2:
+        for i in range(len(results)):
+            if results[i:i+5] == [2 for _ in range(5)] and not breath_in_progress:
                 breath_in_progress = True
 
-            elif prediction == 0 and breath_in_progress:
+            elif results[i:i+5] == [0 for _ in range(5)] and breath_in_progress:
                 breath_count += 1
                 breath_in_progress = False
 
