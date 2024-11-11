@@ -58,7 +58,7 @@ def save_sequences(
         data, tags = load_tagged_data(file_to_retrieve_sequences)
     sequences = []
     for i in range(size, len(data)):
-        position = i - size
+        position = i - size # + size // 2
         sequence = data[i - size : i]
         sequence.append(abs(max(sequence) - min(sequence)))
         if certain_tags is not None:
@@ -125,10 +125,10 @@ def prepare_data_for_training(sensor) -> None:
         )
 
         if data != "_test.txt":
-            save_sequences_to_concatenated(
-                f"{directory}/{sensor_type}_sequence/{sensor_type}" + data,
-                f"{directory}/{sensor_type}_sequence/{sensor_type}_concatenated.txt",
-            )
+            # save_sequences_to_concatenated(
+            #     f"{directory}/{sensor_type}_sequence/{sensor_type}" + data,
+            #     f"{directory}/{sensor_type}_sequence/{sensor_type}_concatenated.txt",
+            # )
             save_sequences_to_concatenated(
                 f"{directory2}/{sensor_type}_sequence/{sensor_type}" + data,
                 f"{directory}/{sensor_type}_sequence/{sensor_type}_concatenated.txt",
