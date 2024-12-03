@@ -9,10 +9,6 @@ from scripts.plot import plot_evaluation_history
 import matplotlib.pyplot as plt
 from scripts.plot import plot_history
 
-# TODO: Change logic in labelling or any different
-#  plot so it can be used in this test using predicted
-#  data from model and X_test, y_test fields
-
 SENSOR = SensorType.TENSOMETER
 SENSOR_NAME = SENSOR.value["name"]
 
