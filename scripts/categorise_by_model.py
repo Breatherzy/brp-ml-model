@@ -17,18 +17,20 @@ desired_directory = (
     + f"/brp-ml-model/data/raw/{SENSOR_NAME}/"
 )
 
+
 def predict_tags(data: list[float], window_size: int) -> list[int]:
     model = GRUModel()
     model.load(f"../models/saves/{SENSOR_NAME}/GRUModel_{SENSOR_NAME}")
 
     tags = []
     data_to_predict = []
-    for i in range(len(data)-5):
-        numbers = data[i:i+5]
-        numbers.extend([abs(max(data[i:i+5]) - min(data[i:i+5]))])
+    for i in range(len(data) - 5):
+        numbers = data[i : i + 5]
+        numbers.extend([abs(max(data[i : i + 5]) - min(data[i : i + 5]))])
         data_to_predict.append(numbers)
     tags.append(model.predict(np.array(data_to_predict)))
     return tags[0]
+
 
 def save_tagged_data(
     data: list[float], monotonicity: list[float], time: list[float], filename: str
@@ -66,4 +68,9 @@ for file in os.listdir(desired_directory):
 
         mono_tags = predict_tags(numbers, WINDOWS_SIZE)
 
-        save_tagged_data(numbers[:-WINDOWS_SIZE], mono_tags, times[:-WINDOWS_SIZE], filename[:-4] + ".txt")
+        save_tagged_data(
+            numbers[:-WINDOWS_SIZE],
+            mono_tags,
+            times[:-WINDOWS_SIZE],
+            filename[:-4] + ".txt",
+        )

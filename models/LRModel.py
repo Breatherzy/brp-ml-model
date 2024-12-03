@@ -10,7 +10,7 @@ class LRModel(AbstractModel):
         if self.check_if_data_is_loaded():
             self.model = LogisticRegression(max_iter=100)
 
-    def fit(self):
+    def fit(self, weights=None, sensor_type=None, epochs=100, batch_size=32):
         if self.check_if_model_is_compiled():
             history = self.model.fit(self.X_train, self.y_train)
             with open(

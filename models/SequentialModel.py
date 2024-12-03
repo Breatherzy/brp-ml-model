@@ -26,7 +26,7 @@ class SequentialModel(AbstractModel, ABC, metaclass=ABCMeta):
             )
             history = history.history
             with open(
-                f"models/saves/{sensor_type}/{self.__class__.__name__}.history", "a"
+                f"models/saves/{sensor_type}/{self.__class__.__name__}.history", "w"
             ) as file:
                 file.write(str(history) + "\n")
             self.is_model_fitted = True
@@ -43,8 +43,51 @@ class SequentialModel(AbstractModel, ABC, metaclass=ABCMeta):
         if len(y_test.shape) > 1:
             y_test = np.argmax(self.y_test, axis=1)
         result = np.mean(y_pred == y_test)
+
+        predicted_breaths = self.count_breaths(y_pred)
+
+        actual_breaths = self.count_breaths(y_test)
+
+        if actual_breaths == 0:
+            accuracy = 100.0 if predicted_breaths == 0 else 0.0
+        else:
+            accuracy = (
+                1 - abs(predicted_breaths - actual_breaths) / actual_breaths
+            ) * 100
+            accuracy = max(0.0, min(100.0, accuracy))
+
         print("Evaluation result:", result)
+        print(f"Actual breaths: {actual_breaths}")
+        print(f"Predicted breaths: {predicted_breaths}")
+        print(f"Accuracy: {accuracy:.2f}%")
         return result
+
+    def count_breaths(self, results: list[float]) -> int:
+        """
+        Count complete breaths from a file containing numbers and predictions.
+        A complete breath consists of:
+        1. A breath in (prediction = 2)
+        2. Followed by any number of other states (1, 3, 0)
+        3. Until a breath out (0) is encountered
+
+        Args:
+        filename (str): Path to the file containing two columns: number and prediction
+
+        Returns:
+        int: Number of complete breaths
+        """
+        breath_count = 0
+        breath_in_progress = False
+
+        for prediction in results:
+            if prediction == 2:
+                breath_in_progress = True
+
+            elif prediction == 0 and breath_in_progress:
+                breath_count += 1
+                breath_in_progress = False
+
+        return breath_count
 
     def save(self, filename):
         self.model.save(filename + ".keras")

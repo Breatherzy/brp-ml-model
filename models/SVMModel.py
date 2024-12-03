@@ -13,7 +13,7 @@ class SVMModel(AbstractModel):
             self.X_train = scaler.fit_transform(self.X_train)
             self.model = SVC(gamma="scale")
 
-    def fit(self):
+    def fit(self, epochs=200, batch_size=500, sensor_type="hist"):
         if self.check_if_model_is_compiled():
             self.model.fit(self.X_train, self.y_train)
             self.is_model_fitted = True
