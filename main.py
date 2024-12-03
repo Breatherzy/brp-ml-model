@@ -9,7 +9,7 @@ from scripts.plot import plot_evaluation_history
 import matplotlib.pyplot as plt
 from scripts.plot import plot_history
 
-SENSOR = SensorType.WIT_ACCELEROMETER
+SENSOR = SensorType.TENSOMETER
 SENSOR_NAME = SENSOR.value["name"]
 
 
