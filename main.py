@@ -10,10 +10,6 @@ from scripts.load_data import prepare_data_for_training
 from scripts.plot import plot_evaluation_history, plot_history, plot_test_data
 import matplotlib.pyplot as plt
 
-# TODO: Change logic in labelling or any different
-#  plot so it can be used in this test using predicted
-#  data from model and X_test, y_test fields
-
 SENSOR = SensorType.WIT_ACCELEROMETER
 SENSOR_NAME = SENSOR.value["name"]
 
